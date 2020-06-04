@@ -1,10 +1,10 @@
 FAF bot
 ==================
-The purpose of this discord bot is to automatically put people int team channels.
+The purpose of this discord bot is to automatically put people into team channels based on a match in [FAF](https://faforever.com/).
 
 Available commands
 ==================
-All commands should be prefixed with f/ eg `f/ set antz`
+All commands should be prefixed with f/ eg `f/set antz`
  - `set \<name\>` This will set your FAF name. 
  Without this the bot cannot match your discord and faf. 
  If your discord nickname is the same as your faf name you don't need to run this.
