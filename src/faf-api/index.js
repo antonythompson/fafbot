@@ -53,7 +53,11 @@ let getMatch = async match_id => {
                 if (item.type === 'gamePlayerStats') {
                     let player_id = item.relationships.player.data.id;
                     player_in_team[player_id] = item.attributes.team;
-                    query = query + 'id==' + player_id;
+                    if (query === '') {
+                        query = query + 'id==' + player_id;
+                    } else {
+                        query = query + ',id==' + player_id;
+                    }
                 } else if (item.type === 'mapVersion') {
                     match.map = item.attributes;
                 }
@@ -61,6 +65,7 @@ let getMatch = async match_id => {
             let url = `https://api.faforever.com/data/player?filter=${query}&page[size]=16`
             let player_res = await axios.get(url);
             let teams = {};
+            console.log('players in match', player_res.data);
             if (player_res.data && player_res.data.data) {
                 await helper.processArray(player_res.data.data,player => {
                     if (!teams[player_in_team[player.id]]) {

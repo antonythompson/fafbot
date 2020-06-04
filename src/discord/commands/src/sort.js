@@ -14,6 +14,7 @@ module.exports = {
             let active_channel = await helper.getUserActiveVoiceChannel(msg);
             if (!active_channel) {
                 msg.channel.send(`You must be in a voice channel to run that command.`);
+                return;
             }
             // console.log('active_channel', active_channel);
 
