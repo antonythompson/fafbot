@@ -37,7 +37,7 @@ module.exports = {
                 if (player_match) {
                     let match = await faf.getMatch(player_match.id);
                     console.log('match', match);
-                    if (match.teams.length) {
+                    if (match && match.teams && match.teams.length) {
                         let size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
                         let report_fields = [{
                             name: 'Victory Condition',
