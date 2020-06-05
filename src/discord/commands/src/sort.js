@@ -16,7 +16,8 @@ module.exports = {
                 msg.channel.send(`You must be in a voice channel to run that command.`);
                 return;
             }
-            // console.log('active_channel', active_channel);
+            // console.log(active_channel.parentID)
+            console.log('active_channel', active_channel);
 
             let faf_id = await helper.getFafId(msg.author);
             if (!faf_id) {
@@ -40,6 +41,13 @@ module.exports = {
                     console.log('match', match);
                     if (match && match.teams && match.teams.length) {
                         let size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
+                        let team_fields = match.teams.map(team => {
+                            return {
+                                name: 'Team ' + team.team,
+                                value: helper.getObjectValues(team.players, 'name').join('\n'),
+                                inline: true
+                            }
+                        });
                         let report_fields = [{
                             name: 'Victory Condition',
                             value: match.victoryCondition,
@@ -48,13 +56,7 @@ module.exports = {
                             name: 'Size',
                             value: size,
                             inline: true
-                        },{ name: '\u200B', value: '\u200B' },...match.teams.map(team => {
-                            return {
-                                name: 'Team ' + team.team,
-                                value: helper.getObjectValues(team.players, 'name').join('\n'),
-                                inline: true
-                            }
-                        })];
+                        },{ name: '\u200B', value: '\u200B' },...team_fields];
                         await helper.processArray(match.teams, async function(team){
                             let channel_name = `Team ${team.team} - ${match.name} (temp)`
                             let channel = await msg.channel.guild.channels.create(channel_name, {
