@@ -17,7 +17,7 @@ module.exports = {
                 return;
             }
             // console.log(active_channel.parentID)
-            console.log('active_channel', active_channel);
+            console.log('active_channel', active_channel.id, active_channel.parentID);
 
             let faf_id = await helper.getFafId(msg.author);
             if (!faf_id) {
@@ -38,7 +38,7 @@ module.exports = {
                 let player_match = await faf.getPlayerCurrentMatch(faf_id);
                 if (player_match) {
                     let match = await faf.getMatch(player_match.id);
-                    console.log('match', match);
+                    console.log('match', match.id);
                     if (match && match.teams && match.teams.length) {
                         let size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
                         let team_fields = match.teams.map(team => {
@@ -98,7 +98,7 @@ module.exports = {
                         if (match.map.thumbnailUrlLarge) {
                             embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
                         }
-                        console.log(embed);
+                        console.log('sending embed');
                         msg.channel.send({embed});
                     } else {
                         msg.channel.send(`I couldn't find the players in the match.`);

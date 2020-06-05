@@ -27,8 +27,8 @@ function onVoiceStateUpdate(oldThing, newThing){
 function onMessage(msg){
     try {
         console.log('message received');
+        console.log(msg.content, 'from: ', msg.author.username);
         if (msg.author.bot || !msg.content.match(/^f\/(.+)/) || checkHelp(msg)) return;
-        console.log(msg);
         let done = false;
         helper.processArray(commands, function(command){
             if (done) return;
