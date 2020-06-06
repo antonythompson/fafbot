@@ -6,7 +6,8 @@ const FafUser = models.FafUser;
 
 module.exports = {
     name: 'sort',
-    help: 'This will get everyone in your current match (which must have started) into separate voice channels based on team.',
+    description: 'Sort everyone into team channels.',
+    help: 'This will get everyone in your current match (which must have started) into separate voice channels based on team. \nUsage: `f/sort`',
     check: content => content.match(/^sort(.+)?/),
     run: async (msg, client) => {
         try{

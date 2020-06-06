@@ -1,4 +1,4 @@
-const perms =require('discord-permissions')
+const permManager =require('discord-permissions')
 
 /**
  *
@@ -41,13 +41,17 @@ async function onMessage(msg){
         // 'Use Voice Activity',
         // 'Priority Speaker',
     ];
-    let link = perms.generateInvite(process.env.DISCORD_CLIENT_ID, perms);
+    let client_id = process.env.DISCORD_CLIENT_ID;
+    console.log('check key', client_id, client_id.match(/[0-9]{16,20}/))
+    let link = permManager.generateInvite(client_id, perms);
+    console.log(link);
     msg.reply(link)
 }
 
 module.exports = {
     name: 'invite',
-    help: 'Replies with a link to invite this bot to another discord server.',
-    check: content => content.match(/^invite(.+)/),
+    description: 'Replies with the bot invite link.',
+    help: 'Replies with an invite link. This might be needed if you need to re-invite the bot to add latest permissions. \nUsage: `f/invite`',
+    check: content => content.match(/^invite(.+)?/),
     run: onMessage
 }

@@ -39,7 +39,8 @@ async function onMessage(msg){
 
 module.exports = {
     name: 'set',
-    help: 'Sets your faf name in the bot for automatic channel sorting. \neg `f\/set antz`',
-    check: content => content.match(/^set(.+)/),
+    description: 'Set the category channels should be created in.`',
+    help: 'Set the category channels should be created in`  \nUsage: `f/setcategory <name>`',
+    check: content => content.match(/^setcategory(.+)/),
     run: onMessage
 }

@@ -14,5 +14,7 @@ async function onMessage(msg, client){
 
 module.exports = {
     check: content => content.match(/^join(.+)?/),
+    help: '',
+    description: '',
     run: onMessage
 }
