@@ -5,7 +5,7 @@ The purpose of this discord bot is to automatically put people into team channel
 Available commands
 ==================
 All commands should be prefixed with f/ eg `f/set antz`
- - `set \<name\>` This will set your FAF name. 
+ - `set <name>` This will set your FAF name. 
  Without this the bot cannot match your discord and faf. 
  If your discord nickname is the same as your faf name you don't need to run this.
  - `sort` This will find the game your currently in and sort everyone in the game into channels. You must be in a voice channel to run this.
