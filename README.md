@@ -1,3 +1,5 @@
+[![BuyMeACoffee](https://img.shields.io/badge/BuyMeACoffee-Donate-ff813f.svg?logo=CoffeeScript&style=flat-square)](https://www.buymeacoffee.com/antzzz)
+
 FAF bot
 ==================
 The purpose of this discord bot is to automatically put people into team channels based on a match in [FAF](https://faforever.com/).

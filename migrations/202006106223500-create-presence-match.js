@@ -1,24 +1,25 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('FafUsers', {
+    return queryInterface.createTable('PresenceMatches', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      faf_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      discord_id: {
+      channel_id: {
         type: Sequelize.STRING,
         unique: false,
         allowNull: false,
       },
       guild_id: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      faf_id: {
+        type: Sequelize.STRING,
+        unique: false,
         allowNull: false,
       },
       createdAt: {
@@ -32,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('FafUsers');
+    return queryInterface.dropTable('PresenceMatches');
   }
 };

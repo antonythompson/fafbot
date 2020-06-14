@@ -52,6 +52,6 @@ module.exports = {
     name: 'invite',
     description: 'Replies with the bot invite link.',
     help: 'Replies with an invite link. This might be needed if you need to re-invite the bot to add latest permissions. \nUsage: `f/invite`',
-    check: content => content.match(/^invite(.+)?/),
+    check: content => content.match(/^invite$/),
     run: onMessage
 }

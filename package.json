@@ -11,13 +11,15 @@
     "dotenv": "^8.2.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
-    "sequelize": "^5.21.11"
+    "sequelize": "^5.21.11",
+    "table": "^5.4.6"
   },
   "devDependencies": {
     "sequelize-cli": "^5.5.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

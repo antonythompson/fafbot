@@ -1,4 +1,5 @@
 let faf = require('../../../faf-api');
+console.log('set-user', faf)
 const models = require('../../../../models');
 const FafUser = models.FafUser;
 
@@ -10,10 +11,10 @@ async function onMessage(msg){
             name = name_result[1].trim();
             faf_id = await faf.searchUser(name);
             if (faf_id) {
-                user = await FafUser.findOne({
+                user = await FafUser.findOne({where:{
                     discord_id: msg.author.id,
                     guild_id: msg.guild.id
-                });
+                }});
                 console.log('user', user)
                 if (user) {
                     user.update({

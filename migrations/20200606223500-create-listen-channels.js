@@ -1,20 +1,16 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('FafUsers', {
+    return queryInterface.createTable('ListenChannels', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      faf_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      discord_id: {
+      channel_id: {
         type: Sequelize.STRING,
-        unique: false,
+        unique: true,
         allowNull: false,
       },
       guild_id: {
@@ -32,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('FafUsers');
+    return queryInterface.dropTable('ListenChannels');
   }
 };

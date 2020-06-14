@@ -1,22 +1,11 @@
 const models = require('../../models');
 const fafUserModel = models.FafUser;
-let getFafId = async (discord_author) => {
-    try{
-        let user = await fafUserModel.findOne({where: {discord_id: discord_author.id}});
-        if (user) {
-            return user.faf_id;
-        }
-    } catch(e) {
-        console.log('getFafId err', e);
-    }
-    return null;
-}
 
 let processArray = (items, process) => {
     return new Promise((resolve, reject) => {
         let todo = items.concat();
-        setTimeout(function() {
-            process(todo.shift());
+        setTimeout(async function() {
+            await process(todo.shift());
             if(todo.length > 0) {
                 setTimeout(arguments.callee, 25);
             } else {
@@ -24,6 +13,21 @@ let processArray = (items, process) => {
             }
         }, 25);
     })
+}
+
+/**
+ * @param promises_object should be something like {match: <Promise>, player: <Promise>}
+ * @returns {Promise<void>}
+ */
+let handlePromiseAll = async promises_object => {
+    let response = {};
+    let promises = await Promise.all(Object.values(promises_object));
+    let i = 0;
+    await processArray(Object.keys(promises_object), key => {
+        response[key] = promises[i]
+        i++;
+    })
+    return response;
 }
 
 let getChannelByName = async (message, findByName) => {
@@ -43,17 +47,26 @@ let getObjectValues = (array, key) => {
 }
 
 /**
- *
- * @param msg
- * @returns {Promise<Channel>}
+ * Get a Discord users active voice channel
+ * @param client
+ * @param user_id
+ * @param guild_id
+ * @returns {Promise<*>}
  */
-let getUserActiveVoiceChannel = async (msg) => {
+let getUserActiveVoiceChannel = async (client, user_id, guild_id) => {
     let channel = null;
-    msg.channel.guild.channels.cache.array().forEach(ch => {
-        if (ch.type === 'voice' && ch.members.has(msg.author.id)) {
-            channel = ch;
+    try {
+        let channels = await client.guilds.resolve(guild_id).channels.cache.array()
+        if (channels) {
+            await processArray(channels, ch => {
+                if (ch.type === 'voice' && ch.members.has(user_id)) {
+                    channel = ch;
+                }
+            })
         }
-    });
+    } catch(e) {
+        console.log('err in getUserActiveVoiceChannel', e)
+    }
     return channel;
 }
 
@@ -73,10 +86,10 @@ let moveUser = (client, guild_id, user_id, voice_channel_id) => {
 }
 
 module.exports = {
-    getFafId: getFafId,
-    processArray: processArray,
-    getChannelByName: getChannelByName,
-    moveUser: moveUser,
-    getUserActiveVoiceChannel: getUserActiveVoiceChannel,
-    getObjectValues: getObjectValues,
+    handlePromiseAll,
+    processArray,
+    getChannelByName,
+    moveUser,
+    getUserActiveVoiceChannel,
+    getObjectValues,
 }

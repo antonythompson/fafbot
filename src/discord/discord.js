@@ -1,7 +1,11 @@
-let commands = require('./commands/commands');
-let helper = require('../common/helper');
+const commands = require('./commands/commands');
+const helper = require('../common/helper');
+const faf = require('../faf-api')
+const models = require('../../models');
+const PresenceMatch = models.PresenceMatch
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const onPresenceUpdate = require('./presence');
 
 function start(){
 
@@ -10,6 +14,9 @@ function start(){
     });
     client.on('message', onMessage);
     client.on('voiceStateUpdate', onVoiceStateUpdate);
+    client.on('presenceUpdate', (oldPresence, newPresence) => {
+        onPresenceUpdate(client, oldPresence, newPresence)
+    });
     client.login(process.env.DISCORD_TOKEN);
 
 }
@@ -23,19 +30,20 @@ function onVoiceStateUpdate(oldThing, newThing){
         oldThing.channel.delete();
     }
 }
+
 async function onMessage(msg){
     try {
         if (msg.author.bot || !msg.content.match(/^f\/(.+)/) || await checkHelp(msg)) return;
         console.log('message received');
         console.log(msg.content, 'from: ', msg.author.username);
         let done = false;
-        helper.processArray(commands, function(command){
+        await helper.processArray(commands, async function(command){
             if (done) return;
             let content = msg.content.match(/^f\/(.+)/)[1];
-            console.log('checking', content, command);
+            console.log('checking command', command.name);
             if (command.check(content, msg)) {
                 console.log('checked ok');
-                command.run(msg, client);
+                await command.run(msg, client);
                 done = true;
             }
         });
@@ -83,6 +91,11 @@ async function checkHelp(msg){
             } else {
                 message = {
                     embed: {
+                        author: {
+                            name: 'FAF bot',
+                            icon_url: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
+                            url: 'https://github.com/antonythompson/fafbot',
+                        },
                         title: 'Available commands',
                         description: 'All the available commands are below. For more info on each command use the help command\n eg: `f/help set`',
                         fields: messages,
