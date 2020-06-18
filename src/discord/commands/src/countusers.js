@@ -12,13 +12,19 @@ async function onMessage(msg, client){
                 if (!member.user.bot) {
                     console.log(new Date(member.joinedTimestamp));
                     let data = {
-                        discord_id: member.user.id,
-                        guild_id: member.guild.id,
                         name: member.user.username,
                         join_date: new Date(member.joinedTimestamp),
                     };
-                    console.log(data);
-                    await DiscordUser.create(data)
+                    let where = {
+                        discord_id: member.user.id,
+                        guild_id: member.guild.id,
+                    }
+                    console.log('data', where, data);
+                    let res = await DiscordUser.findOrCreate({where: where, defaults: data})
+                    if (!res[1]) {
+                        res[0].set(data);
+                        res[0].save();
+                    }
                 }
             })
             console.log('member count', msg.guild.members.cache.array().length)
