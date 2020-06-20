@@ -99,8 +99,7 @@ module.exports = {
                         if (match.map.thumbnailUrlLarge) {
                             embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
                         }
-                        console.log('sending embed');
-                        msg.channel.send({embed});
+                        await helper.sendLog(msg.guild.id, {embed}, msg);
                     } else {
                         msg.channel.send(`I couldn't find the players in the match.`);
                     }
