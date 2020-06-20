@@ -11,7 +11,8 @@ async function onMessage(msg, client){
             let data = {
                 match_log_channel_id: msg.channel.id,
             }
-            guild.update(data)
+            let res = await guild.update(data)
+            msg.reply('Log channel set')
         }
     } catch (e) {
         console.log('err in listen command: ', e);
