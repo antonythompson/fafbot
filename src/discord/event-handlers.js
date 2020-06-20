@@ -19,16 +19,11 @@ async function onGuildMemberAdd(member) {
     try{
         if (!member.user.bot) {
             let data = {
-                name: member.user.username,
                 join_date: new Date(member.joinedTimestamp),
                 discord_id: member.user.id,
                 guild_id: member.guild.id,
             }
-            let res = await GuildJoin.create(data)
-            // if (!res[1]) {
-            //     res[0].set(data);
-            //     res[0].save();
-            // }
+            await GuildJoin.create(data)
         }
     } catch (e) {
         console.log('error in onGuildCreate', e)

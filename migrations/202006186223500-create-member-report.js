@@ -3,6 +3,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     //RENAME TABLE `fafbot`.`DiscordUsers` TO `fafbot`.`GuildJoins`;
     //ALTER TABLE `GuildJoins` ADD `leave_date` DATETIME NULL AFTER `join_date`;
+    //ALTER TABLE `guildjoins` DROP `name`;
     return queryInterface.createTable('GuildJoins', {
       id: {
         allowNull: false,
@@ -17,11 +18,6 @@ module.exports = {
       },
       guild_id: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      name: {
-        type: Sequelize.STRING,
-        unique: false,
         allowNull: false,
       },
       join_date: {

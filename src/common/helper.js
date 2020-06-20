@@ -43,7 +43,6 @@ let addGuildMembers = async guild => {
         if (!member.user.bot) {
             console.log(new Date(member.joinedTimestamp));
             let data = {
-                name: member.user.username,
                 join_date: new Date(member.joinedTimestamp),
             };
             let where = {
