@@ -38,6 +38,7 @@ let sendLog = async (guild_id, message, context) => {
 }
 
 let addGuildMembers = async guild => {
+    let added = 0;
     await processArray(guild.members.cache.array(), async member => {
         if (!member.user.bot) {
             console.log(new Date(member.joinedTimestamp));
@@ -51,12 +52,12 @@ let addGuildMembers = async guild => {
             }
             console.log('data', where, data);
             let res = await GuildJoin.findOrCreate({where: where, defaults: data})
-            // if (!res[1]) {
-            //     res[0].set(data);
-            //     res[0].save();
-            // }
+            if (res && res[1]) {
+                added++;
+            }
         }
     })
+    return added;
 }
 
 let findOrCreateGuild = async guild => {
