@@ -11,7 +11,8 @@ async function onMessage(msg){
             (async () => {
 
                 const browser = await Apify.launchPuppeteer({
-                    "headless": true
+                    "headless": true,
+                    args: ['--no-sandbox']
                 });
                 const page = await browser.newPage();
                 await page.goto('https://faforever.com/login');
