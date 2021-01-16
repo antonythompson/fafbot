@@ -64,7 +64,7 @@ async function onMessage(msg){
 module.exports = {
     name: 'clan',
     description: 'Generate a clan invite link.',
-    help: 'This will generate a clan invite link for you. \nUsage: `f/clan <name>`',
+    help: 'This will generate a clan invite link for you. \nUsage: `f/clan username`',
     check: content => content.match(/^clan(.+)/),
     run: onMessage
 }
