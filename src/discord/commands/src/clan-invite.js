@@ -37,9 +37,15 @@ async function onMessage(msg){
                 await page2.waitForNavigation();
                 let url = page2.url();
 
+                let failed = true;
                 if (url.indexOf('invitation') !== -1) {
-                    msg.reply(url);
-                } else {
+                    let invitation_id = url.match(/invitation_id=(.+)/)
+                    if (invitation_id && invitation_id[1]) {
+                        msg.reply(`https://www.faforever.com/clans/accept?i=${invitation_id[1]}`);
+                        failed = false
+                    }
+                }
+                if (failed) {
                     msg.reply('There was a problem generating an invite for `' + name + '` please check that username is correct, otherwise maybe @antz needs to generate one manually.')
                 }
 
