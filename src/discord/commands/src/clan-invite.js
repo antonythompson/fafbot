@@ -41,7 +41,7 @@ async function onMessage(msg){
                 if (url.indexOf('invitation') !== -1) {
                     let invitation_id = url.match(/invitation_id=(.+)/)
                     if (invitation_id && invitation_id[1]) {
-                        msg.reply(`https://www.faforever.com/clans/accept?i=${invitation_id[1]}`);
+                        msg.reply(`Here's your invite link. Click it and let us know when you've done it so we can assign your @ANZFAF Clan role. https://www.faforever.com/clans/accept?i=${invitation_id[1]}`);
                         failed = false
                     }
                 }
