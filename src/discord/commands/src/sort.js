@@ -17,6 +17,10 @@ module.exports = {
                 msg.channel.send(`You must be in a voice channel to run that command.`);
                 return;
             }
+            if (active_channel.parentID !== 714671795105562745) {
+                msg.channel.send(`You must be in the "Battle Prep" channel to run this`);
+                return;
+            }
             // console.log(active_channel.parentID)
             console.log('active_channel', active_channel.id, active_channel.parentID);
 
