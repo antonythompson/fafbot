@@ -64,10 +64,15 @@ module.exports = {
                         },{ name: '\u200B', value: '\u200B' },...team_fields];
                         await helper.processArray(match.teams, async function(team){
                             let channel_name = `Team ${team.team} - ${match.name} (temp)`
+                            let parent_id = active_channel.parentID
+
+                            if (process.env.CHANNEL_PARENT_ID) {
+                                parent_id = process.env.CHANNEL_PARENT_ID
+                            }
                             let channel = await msg.channel.guild.channels.create(channel_name, {
                                 type: 'voice',
                                 reason: 'temp channel for a FAF game',
-                                parent: active_channel.parentID
+                                parent: parent_id
                             });
                             let player_ids = helper.getObjectValues(team.players, 'id')
                             let faf_users = FafUser.findAll({ where: {
