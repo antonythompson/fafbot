@@ -17,4 +17,4 @@ Soon I will be writing an auto sorting feature. This will let you choose voice c
 
 Usage
 ==================
-Invite the bot with this [link](https://discord.com/api/oauth2/authorize?client_id=710821263823863818&scope=bot&permissions=16796752)
+Please contact Antz#6868 in the FAF discord if you would like to use this bot. I can help with setup.
