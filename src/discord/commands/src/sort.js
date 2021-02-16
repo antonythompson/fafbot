@@ -66,7 +66,7 @@ module.exports = {
                             let channel_name = `Team ${team.team} - ${match.name} (temp)`
                             let parent_id = active_channel.parentID
 
-                            if (process.env.CHANNEL_PARENT_ID) {
+                            if (parseInt(msg.guild.id) === 657376549108187163 && process.env.CHANNEL_PARENT_ID) {
                                 parent_id = process.env.CHANNEL_PARENT_ID
                             }
                             let channel = await msg.channel.guild.channels.create(channel_name, {
