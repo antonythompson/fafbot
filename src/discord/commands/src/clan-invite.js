@@ -2,6 +2,10 @@
 const Apify = require('apify');
 
 async function onMessage(msg){
+    if (parseInt(msg.guild.id) !== 657376549108187163) {
+        msg.reply('This command is not available for this discord server.');
+        return;
+    }
     let name;
     try{
         let name_result = msg.content.match(/^f\/clan(.+)/)
