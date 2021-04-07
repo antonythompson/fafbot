@@ -22,4 +22,4 @@ Invite the bot with this [link](https://discord.com/api/oauth2/authorize?client_
 
 Support
 ==================
-Buy me a coffee [here](buymeacoffee.com/antzzz)
+Buy me a coffee [here](https://buymeacoffee.com/antzzz)
