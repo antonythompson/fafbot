@@ -6,6 +6,7 @@ let commands = [
     require('./src/sort'),
     require('./src/invite'),
     require('./src/clan-invite'),
+    require('./src/test-puppeteer'),
 ];
 
 module.exports = commands;

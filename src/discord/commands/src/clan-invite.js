@@ -2,6 +2,9 @@
 const Apify = require('apify');
 
 async function onMessage(msg){
+    // TODO make it work for multiple clans..
+    // right now the username and password of the clan leader must be stored in the .env.
+    // It could potentially be stored in the DB but with decent encryption. Not sure about that..
     if (parseInt(msg.guild.id) !== 657376549108187163) {
         msg.reply('This command is not available for this discord server.');
         return;
