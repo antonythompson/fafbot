@@ -45,7 +45,10 @@ module.exports = {
                     let match = await faf.getMatch(player_match.id);
                     console.log('match', match.id);
                     if (match && match.teams && match.teams.length) {
-                        let size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
+                        let size = false
+                        if (match.map) {
+                            size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
+                        }
                         let team_fields = match.teams.map(team => {
                             return {
                                 name: 'Team ' + team.team,
@@ -53,15 +56,20 @@ module.exports = {
                                 inline: true
                             }
                         });
-                        let report_fields = [{
+                        let main_fields = [{
                             name: 'Victory Condition',
                             value: match.victoryCondition,
                             inline: true
-                        },{
-                            name: 'Size',
-                            value: size,
-                            inline: true
-                        },{ name: '\u200B', value: '\u200B' },...team_fields];
+                        }];
+                        if (size) {
+                            main_fields.push({
+                                name: 'Size',
+                                value: size,
+                                inline: true
+                            })
+                        }
+                        main_fields.push({ name: '\u200B', value: '\u200B' })
+                        let report_fields = [...main_fields,...team_fields];
                         await helper.processArray(match.teams, async function(team){
                             let channel_name = `Team ${team.team} - ${match.name} (temp)`
                             let parent_id = active_channel.parentID
@@ -98,15 +106,20 @@ module.exports = {
                                 }
                             })
                         });
+                        let description = 'Map generator match'
+                        if (match.map && match.map.description) { //map generator doesn't include the map object
+                            description = match.map.description
+                        }
+
                         let embed = {
-                            description: match.map.description,
+                            description: description,
                             fields: report_fields,
-                            image: {
-                                url: encodeURI(match.map.thumbnailUrlLarge)
-                            },
                         };
-                        if (match.map.thumbnailUrlLarge) {
+                        if (match.map && match.map.thumbnailUrlLarge) {
                             embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
+                            embed.image = {
+                                url: encodeURI(match.map.thumbnailUrlLarge)
+                            }
                         }
                         await helper.sendLog(msg.guild.id, {embed}, msg);
                     } else {
