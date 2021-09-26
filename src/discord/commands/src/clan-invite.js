@@ -11,11 +11,12 @@ async function onMessage(msg){
     }
     let name;
     try{
+        msg.reply("Clan invite need to be generated manually now. <@401536987326185472> will generate you one.")
+        return;
         let name_result = msg.content.match(/^f\/clan(.+)/)
         if (name_result && name_result[1]) {
             name = name_result[1].trim();
-
-            (async () => {
+            await (async () => {
 
                 const browser = await Apify.launchPuppeteer({
                     "headless": true,
