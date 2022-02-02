@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 
 let connection = new Sequelize(
     process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS,
-    host: 'localhost', dialect='postgres'
+    host: '/tmp/.s.PGSQL.5432', dialect='postgres'
 );
 
 // let connection = mysql.createConnection({
