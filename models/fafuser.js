@@ -1,9 +1,13 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+
+const { Sequelize, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
     const FafUser = sequelize.define('FafUser', {
-        faf_id: DataTypes.INTEGER,
-        discord_id: DataTypes.STRING,
-        guild_id: DataTypes.STRING,
+        faf_id: Sequelize.INTEGER,
+        discord_id: Sequelize.STRING,
+        guild_id: Sequelize.STRING,
+	discord_username: Sequelize.STRING,
     }, {});
     FafUser.associate = function (models) {
         // associations can be defined here

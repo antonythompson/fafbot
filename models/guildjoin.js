@@ -1,5 +1,8 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+
+const { Sequelize, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
     const GuildJoin = sequelize.define('GuildJoin', {
         discord_id: DataTypes.STRING,
         guild_id: DataTypes.STRING,
