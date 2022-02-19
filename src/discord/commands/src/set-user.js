@@ -1,6 +1,4 @@
 let faf = require('../../../faf-api');
-const models = require('../../../../models');
-const FafUser = models.FafUser;
 let helper = require('../../../common/helper');
 
 async function onMessage(msg){
@@ -10,32 +8,15 @@ async function onMessage(msg){
         if (name_result && name_result[1]) {
             name = name_result[1].trim();
             faf_id = await faf.searchUser(name);
-            if (faf_id) {
-                user = await FafUser.findOne({where: {
-                    discord_id: msg.author.id,
-                    guild_id: msg.guild.id
-                }});
-                console.log('user', user)
-                if (user) {
-                    user.update({
-                        discord_id: msg.author.id,
-                        guild_id: msg.guild.id,
-                        faf_id: faf_id
-                    })
-                } else {
-                    user = await FafUser.create({
-                        discord_id: msg.author.id,
-                        guild_id: msg.guild.id,
-                        faf_id: faf_id
-                    });
-                }
-                if (user) {
-                    msg.reply('Your faf login has been set')
-                } else {
-                    msg.reply('There was a problem saving your login')
-                }
+            if (! faf_id) {
+                msg.reply(`I could not find a FAF login for '${name}'.`);
+                return;
+            }
+            user = helper.setFafId(msg.author.id, faf_id, msg.author.guild.id, name);
+            if (user) {
+                msg.reply('Your faf login has been set')
             } else {
-                msg.reply('I could not find your faf login.')
+                msg.reply('There was a problem saving your login')
             }
         }
     } catch (e) {
