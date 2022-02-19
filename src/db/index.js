@@ -3,7 +3,9 @@ const Sequelize = require('sequelize');
 
 let connection = new Sequelize(
     process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS,
-    host: '/tmp/.s.PGSQL.5432', dialect='postgres'
+    { dialect: 'postgres', dialectOptions: {
+        socketPath: '/tmp/.s.PGSQL.5432'
+    }}
 );
 
 // let connection = mysql.createConnection({
@@ -13,6 +15,14 @@ let connection = new Sequelize(
 //     database: process.env.DB_DATABASE
 // })
 
-connection.connect(); // necessary with sequalize?
+// connection.connect();
+
+// connection.authenticate().then(() => {
+//     console.log('Connected to database');
+// }).catch(err => {
+//     console.error('Unable to connect to database:', err)
+// }).finally(() => {
+//     connection.close();
+// });
 
 module.exports = connection;
