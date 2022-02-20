@@ -1,20 +1,28 @@
 const axios = require('axios');
 let helper = require('../common/helper')
 let getPlayerCurrentMatch = async player_id => {
+    // Actually gets the most recent match, which might be ended.
     let result;
     try{
         let url = `https://api.faforever.com/data/gamePlayerStats?include=game&filter=player.id==${player_id}&sort=-id&page[size]=1`
         let res = await axios.get(url)
-        console.log('getPlayerCurrentMatch');
-        console.log(res.data.included[0]);
+        console.log('getPlayerCurrentMatch got something...');
+        // console.log(res.data.included[0]);
         if (res.data && res.data.included
             && res.data.included[0]
             && res.data.included[0].attributes
-            && res.data.included[0].attributes.endTime === null) {
+        ) {
+            // && res.data.included[0].attributes.endTime === null) {
             result = res.data.included[0];
+            console.log("... found match", result.id, "named", result.attributes.name);
         }
     } catch (e) {
         console.log('err in searchUser', e);
+    }
+    if (result) {
+        console.log('getPlayerCurrentMatch(', player_id, ') returns match with id', result.id, 'name', result.attributes.name);
+    } else {
+        console.log('Player', player_id, 'not in a match?')
     }
     return result;
 }
@@ -44,15 +52,16 @@ let getMatch = async match_id => {
             let matchData = res.data;
             match = matchData.data.attributes;
             match.id = matchData.data.id;
-            console.log('inside after');
-            console.log(match);
+            console.log('searched for match id', match_id, 'found match', match.id);
             let player_in_team = {};
             let query = '';
             await helper.processArray(res.data.included,item => {
-                console.log(item);
+                // console.log(item);
                 if (item.type === 'gamePlayerStats') {
                     let player_id = item.relationships.player.data.id;
-                    player_in_team[player_id] = item.attributes.team;
+                    let team_no = item.attributes.team - 1;
+                    player_in_team[player_id] = team_no;
+                    console.log("game has player", player_id, "in team", team_no);
                     if (query === '') {
                         query = query + 'id==' + player_id;
                     } else {
