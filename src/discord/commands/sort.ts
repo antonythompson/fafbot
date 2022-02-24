@@ -4,7 +4,7 @@ const models = require('../../../../models');
 const Discord = require('discord.js');
 const FafUser = models.FafUser;
 
-module.exports = {
+export default {
     name: 'sort',
     description: 'Sort everyone into team channels.',
     help: 'This will get everyone in your current match (which must have started) into separate voice channels based on team. \nUsage: `f/sort`',

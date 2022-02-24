@@ -37,7 +37,7 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+export default {
     name: 'set',
     description: 'Set the category channels should be created in.`',
     help: 'Set the category channels should be created in`  \nUsage: `f/setcategory <name>`',

@@ -12,7 +12,7 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+export default {
     check: content => content.match(/^join(.+)?/),
     help: '',
     description: '',

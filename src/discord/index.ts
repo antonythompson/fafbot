@@ -25,6 +25,6 @@ function start(){
 }
 
 
-module.exports = {
+export default {
     start: start
 };

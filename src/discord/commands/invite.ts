@@ -48,7 +48,7 @@ async function onMessage(msg){
     msg.reply(link)
 }
 
-module.exports = {
+export default {
     name: 'invite',
     description: 'Replies with the bot invite link.',
     help: 'Replies with an invite link. This might be needed if you need to re-invite the bot to add latest permissions. \nUsage: `f/invite`',

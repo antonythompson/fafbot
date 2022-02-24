@@ -69,7 +69,7 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+export default {
     name: 'clan',
     description: 'Generate a clan invite link.',
     help: 'This will generate a clan invite link for you. \nUsage: `f/clan username`',

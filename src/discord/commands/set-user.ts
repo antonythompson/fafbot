@@ -30,7 +30,7 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+export default {
     name: 'set',
     description: 'Set your faf login if different to discord.',
     help: 'Sets your faf name in the bot for automatic channel sorting. \nUsage: `f/set <name>`',

@@ -1,5 +1,5 @@
 
-module.exports = [
+export default [
     require('./checksetup'),
     require('./set-log'),
     require('./set-user'),

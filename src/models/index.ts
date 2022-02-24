@@ -1,4 +1,4 @@
-'use strict';
+
 
 require("dotenv").config();
 const fs = require('fs');
@@ -23,7 +23,7 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = {
+export default {
     connection: db,
     FafUser: FafUser,
     Guild: Guild,
