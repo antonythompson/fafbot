@@ -1,5 +1,5 @@
 const axios = require('axios');
-let helper = require('../common/helper')
+let helper = require('/common/helper')
 let getPlayerCurrentMatch = async player_id => {
     // Actually gets the most recent match, which might be ended.
     let result;
