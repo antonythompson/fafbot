@@ -155,7 +155,7 @@ async function checkHelp(msg){
     }
 }
 
-module.exports = {
+export default {
     onMessage,
     onGuildDelete,
     onVoiceStateUpdate,

@@ -97,7 +97,7 @@ let getMatch = async match_id => {
     return match
 }
 
-module.exports = {
+export default {
     getPlayerCurrentMatch: getPlayerCurrentMatch,
     searchUser: searchUser,
     getMatch: getMatch,

@@ -170,7 +170,7 @@ let moveUser = (client, guild_id, user_id, voice_channel_id) => {
         })
 }
 
-module.exports = {
+export default {
     sendLog,
     findOrCreateGuild,
     addGuildMembers,

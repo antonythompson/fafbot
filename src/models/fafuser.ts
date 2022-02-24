@@ -1,8 +1,8 @@
-'use strict';
+
 
 const { Sequelize, DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+export default (sequelize) => {
     const FafUser = sequelize.define('FafUser', {
         faf_id: Sequelize.INTEGER,
         discord_id: Sequelize.STRING,

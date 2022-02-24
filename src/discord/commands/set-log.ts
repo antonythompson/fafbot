@@ -19,7 +19,7 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+export default {
     name: 'log here',
     description: 'Set the log channel for matches',
     check: content => {

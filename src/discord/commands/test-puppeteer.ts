@@ -88,7 +88,7 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+export default {
     name: 'test-puppeteer',
     description: 'Generate a clan invite link.',
     help: 'Test puppeteer is working (used for clan invites)',

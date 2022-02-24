@@ -21,7 +21,7 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+export default {
     name: 'checksetup',
     description: 'Check the setup for the bot',
     check: content => {

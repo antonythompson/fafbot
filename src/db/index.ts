@@ -25,4 +25,4 @@ let connection = new Sequelize(
 //     connection.close();
 // });
 
-module.exports = connection;
+export default connection;

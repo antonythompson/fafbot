@@ -1,5 +1,5 @@
-'use strict';
-module.exports = {
+
+export default {
   up: (queryInterface, Sequelize) => {
     //RENAME TABLE `fafbot`.`DiscordUsers` TO `fafbot`.`GuildJoins`;
     //ALTER TABLE `GuildJoins` ADD `leave_date` DATETIME NULL AFTER `join_date`;

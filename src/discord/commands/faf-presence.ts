@@ -5,7 +5,7 @@ function onMessage(msg){
     console.log('gameid', game_id);
 }
 
-module.exports = {
+export default {
     check: (content, msg) => {
         return msg.application
             && msg.application.id === '464069837237518357'
