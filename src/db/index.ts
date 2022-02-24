@@ -1,5 +1,5 @@
 // let mysql = require('mysql')
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 let connection = new Sequelize(
     process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS,

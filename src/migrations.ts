@@ -1,7 +1,7 @@
 require('dotenv').config();
 // const mysql = require('mysql');
-const pg = require('pg');
-const migration = require('postgres-migrations');
+import pg from 'pg';
+import migration from 'postgres-migrations';
 const connection = pg.createPool({
     connectionLimit : 10,
     host: process.env.DB_HOST,

@@ -1,5 +1,5 @@
-let faf = require('../../../faf-api');
-const models = require('../../../../models');
+import faf from '../../faf-api';
+import models from '../../models';
 const FafUser = models.FafUser;
 
 async function onMessage(msg){

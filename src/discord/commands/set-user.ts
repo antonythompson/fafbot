@@ -1,5 +1,5 @@
-let faf = require('../../../faf-api');
-let helper = require('../../../common/helper');
+import faf from '../../faf-api';
+import helper from '../../common/helper';
 
 async function onMessage(msg){
     let faf_id,name,user;

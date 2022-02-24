@@ -1,5 +1,5 @@
 
-const Apify = require('apify');
+import Apify from 'apify';
 
 async function onMessage(msg){
     // TODO make it work for multiple clans..

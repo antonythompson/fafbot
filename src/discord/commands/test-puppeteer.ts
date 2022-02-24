@@ -1,5 +1,5 @@
 
-const Apify = require('apify');
+import Apify from 'apify';
 const fs = require('fs')
 
 async function onMessage(msg){
