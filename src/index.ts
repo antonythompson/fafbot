@@ -1,7 +1,4 @@
-import { config } from 'dotenv';
-import discord from './discord';
+require('dotenv').config();
 
-
-config();
-
+let discord = require('./src/discord/discord.js');
 discord.start();
