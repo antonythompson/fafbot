@@ -1,5 +1,5 @@
 
-let helper = require('../common/helper');
+let helper = require('/common/helper');
 const { Client, Intents } = require('discord.js');
 const client = new Client({intents: [
     Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES,
