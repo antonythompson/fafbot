@@ -1,4 +1,4 @@
-const models = require('/models');
+import models from '../models';
 const fafUserModel = models.FafUser;
 const guildModel = models.Guild;
 const GuildJoin = models.GuildJoin;

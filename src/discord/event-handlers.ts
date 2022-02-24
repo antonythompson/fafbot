@@ -1,8 +1,8 @@
-let helper = require('/common/helper');
-let commands = require('./commands');
-const models = require('/models');
+import helper from '../common/helper';
+import commands from './commands';
+import models from '../models';
 const GuildJoin = models.GuildJoin
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 const Op = Sequelize.Op;
 const { MessageEmbed } = require('discord.js');
 

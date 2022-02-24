@@ -1,4 +1,4 @@
-let faf = require('../../../faf-api');
+import faf from '../../faf-api';
 
 function onMessage(msg){
     let game_id = msg.activity.partyID

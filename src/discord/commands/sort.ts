@@ -1,7 +1,6 @@
-let faf = require('../../../faf-api');
-let helper = require('../../../common/helper');
-const models = require('../../../../models');
-const Discord = require('discord.js');
+import faf from '../../faf-api';
+import helper from '../../common/helper';
+import models from '../../models';
 const FafUser = models.FafUser;
 
 export default {

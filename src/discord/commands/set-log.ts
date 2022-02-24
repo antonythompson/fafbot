@@ -1,5 +1,4 @@
-let helper = require('../../../common/helper');
-const models = require('../../../../models');
+import models from '../../models';
 const Guild = models.Guild;
 
 async function onMessage(msg, client){

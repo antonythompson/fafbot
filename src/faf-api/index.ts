@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 let helper = require('/common/helper')
 let getPlayerCurrentMatch = async player_id => {
     // Actually gets the most recent match, which might be ended.
