@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Data, Game, MapVersion, MapVersionAttributes, Player, Validity, VictoryCondition } from './types';
-let helper = require('/common/helper');
+import { Data, Game, MapVersion, MapVersionAttributes, Player, PlayerStub, Validity, VictoryCondition } from './types';
+import helper from '../common/helper';
 
 export interface Match {
     id: string;
@@ -83,7 +83,7 @@ let getMatch = async match_id => {
             await helper.processArray(included, item => {
                 // console.log(item);
                 if (item.type === 'gamePlayerStats') {
-                    let player_id = item.relationships.player.data.id;
+                    let player_id = (item.relationships.player as unknown as Data<PlayerStub>).data.id;
                     let team_no = item.attributes.team - 1;
                     player_in_team[player_id] = team_no;
                     console.log("game has player", player_id, "in team", team_no);
@@ -97,7 +97,7 @@ let getMatch = async match_id => {
                 }
             });
             let url = `https://api.faforever.com/data/player?filter=${query}&page[size]=16`
-            const { data: players } = await axios.get<Player>(url);
+            const { data: players } = await axios.get<Player[]>(url);
             console.log('players in match', players);
             if (players) {
                 await helper.processArray(players, player => {
