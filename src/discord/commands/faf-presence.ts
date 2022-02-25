@@ -1,3 +1,4 @@
+import { Command } from '.';
 import faf from '../../faf-api';
 
 function onMessage(msg){
@@ -5,12 +6,17 @@ function onMessage(msg){
     console.log('gameid', game_id);
 }
 
-export default {
-    check: (content, msg) => {
-        return msg.application
-            && msg.application.id === '464069837237518357'
+const out: Command = {
+    check: (_, msg) => {
+        return msg
+            && msg.applicationId === '464069837237518357'
             && msg.activity
-            && msg.activity.partyID;
+            && msg.activity.partyId;
     },
-    run: onMessage
+    help: '',
+    name: 'fafPresence',
+    run: onMessage,
+    description: ''
 }
+
+export default out;

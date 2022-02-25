@@ -1,6 +1,6 @@
 
 
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 export default (sequelize) => {
     const GuildJoin = sequelize.define('GuildJoin', {

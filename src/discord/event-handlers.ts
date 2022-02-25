@@ -109,11 +109,11 @@ async function checkHelp(msg){
         if (! msg.content.match(/^f\/help(.+)?/)) {
             return false;
         }
-        let messages = []
+        let messages: string[] = [];
         let commandCheck = msg.content.match(/^f\/help(.+)/)
         let userCommand = commandCheck && commandCheck[1] ? commandCheck[1].trim() : null;
-        let command_help = false;
-        await helper.processArray(commands, (command, index) => {
+        let command_help;
+        await helper.processArray(commands, (command) => {
             let is_command_valid = command && command.description && command.help && command.name
             if (is_command_valid) {
                 if (command.name === userCommand) {

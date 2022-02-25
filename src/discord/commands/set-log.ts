@@ -1,3 +1,4 @@
+import { Command } from '.';
 import models from '../../models';
 const Guild = models.Guild;
 
@@ -18,11 +19,14 @@ async function onMessage(msg, client){
     }
 }
 
-export default {
+const out: Command = {
     name: 'log here',
     description: 'Set the log channel for matches',
     check: content => {
         return content.match(/^log here/)
     },
+    help: '',
     run: onMessage
 }
+
+export default out;

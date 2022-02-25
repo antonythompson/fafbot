@@ -1,8 +1,5 @@
 require("dotenv").config();
-import fs from 'fs';
-import path from 'path';
-import Sequelize from 'sequelize';
-const basename = path.basename(__filename);
+import { Sequelize } from 'sequelize';
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config')[env];
 
@@ -14,10 +11,10 @@ const Guild = require('./guild')(sequelize)
 const GuildJoin = require('./guildjoin')(sequelize)
 
 export default {
-    connection: {
-      sequelize,
-      Sequelize
-    },
+    // connection: {
+    //   sequelize,
+    //   Sequelize
+    // },
     FafUser: FafUser,
     Guild: Guild,
     GuildJoin: GuildJoin,

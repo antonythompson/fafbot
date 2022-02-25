@@ -1,3 +1,4 @@
+import { Command } from '.';
 import faf from '../../faf-api';
 import models from '../../models';
 const FafUser = models.FafUser;
@@ -37,10 +38,12 @@ async function onMessage(msg){
     }
 }
 
-export default {
+const out: Command = {
     name: 'set',
     description: 'Set the category channels should be created in.`',
     help: 'Set the category channels should be created in`  \nUsage: `f/setcategory <name>`',
     check: content => content.match(/^setcategory(.+)/),
     run: onMessage
 }
+
+export default out;
