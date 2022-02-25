@@ -1,3 +1,4 @@
+import { Command } from '.';
 import helper from '../../common/helper';
 import models from '../../models';
 const Guild = models.Guild;
@@ -21,11 +22,14 @@ async function onMessage(msg, client){
     }
 }
 
-export default {
+const out: Command = {
     name: 'checksetup',
+    help: '',
     description: 'Check the setup for the bot',
     check: content => {
         return content.match(/^checksetup/)
     },
     run: onMessage
 }
+
+export default out;

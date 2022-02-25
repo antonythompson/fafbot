@@ -1,4 +1,5 @@
 import https from 'https';
+import { Command } from '.';
 const helper = require('../../common/helper')
 async function onMessage(msg, client){
     try {
@@ -12,9 +13,12 @@ async function onMessage(msg, client){
     }
 }
 
-export default {
+const out: Command = {
     check: content => content.match(/^join(.+)?/),
     help: '',
     description: '',
-    run: onMessage
+    run: onMessage,
+    name: ''
 }
+
+export default out;
