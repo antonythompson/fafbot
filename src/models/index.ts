@@ -1,21 +1,25 @@
-require("dotenv").config();
 import { Sequelize } from 'sequelize';
+import Config from '../config';
+import FafUser from './fafuser';
+import Guild from './guild';
+import GuildJoin from './guildjoin';
+
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config')[env];
+const config = Config[env];
 
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-const FafUser = require('./fafuser')(sequelize)
-const Guild = require('./guild')(sequelize)
-const GuildJoin = require('./guildjoin')(sequelize)
+const fafUser = FafUser(sequelize)
+const guild = Guild(sequelize)
+const guildJoin = GuildJoin(sequelize)
 
 export default {
     // connection: {
     //   sequelize,
     //   Sequelize
     // },
-    FafUser: FafUser,
-    Guild: Guild,
-    GuildJoin: GuildJoin,
+    FafUser: fafUser,
+    Guild: guild,
+    GuildJoin: guildJoin,
 };
