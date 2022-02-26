@@ -11,6 +11,9 @@ async function onMessage(msg, client){
             let data = {
                 match_log_channel_id: msg.channel.id,
             }
+            if (!guild) {
+                return;
+            }
             let res = await guild.update(data)
             msg.reply('Log channel set')
         }
