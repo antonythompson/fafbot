@@ -110,7 +110,6 @@ const processArray = <T>(items: T[], process: (value: T, index?: string) => void
         const fn = () => {
             process(todo.shift() as T);
             if(todo.length > 0) {
-                // @ts-ignore
                 setTimeout(fn, 25);
             } else {
                 resolve();
