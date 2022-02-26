@@ -7,7 +7,7 @@ interface GuildJoinAttributes {
     leave_date: string;
 }
 // Some fields are optional when calling GuildJoinModel.create() or GuildJoinModel.build()
-interface GuildJoinCreationAttributes extends Optional<GuildJoinAttributes, "discord_id"> {}
+interface GuildJoinCreationAttributes extends GuildJoinAttributes {}
 
 // We need to declare an interface for our model that is basically what our class would be
 interface GuildJoinInstance
