@@ -1,6 +1,7 @@
 
-const Apify = require('apify');
-const fs = require('fs')
+import Apify from 'apify';
+import { Command } from '.';
+import fs from 'fs';
 
 async function onMessage(msg){
     let name;
@@ -27,8 +28,10 @@ async function onMessage(msg){
 
                 msg.reply('Launching...');
                 const browser = await Apify.launchPuppeteer({
-                    "headless": true,
-                    args: ['--no-sandbox']
+                    launchOptions: {
+                        headless: true,
+                        args: ['--no-sandbox']
+                    }
                 });
                 msg.reply('Loading faforever.com');
                 const page = await browser.newPage();
@@ -88,10 +91,12 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+const out: Command = {
     name: 'test-puppeteer',
     description: 'Generate a clan invite link.',
     help: 'Test puppeteer is working (used for clan invites)',
     check: content => content.match(/^puppeteer/),
     run: onMessage
 }
+
+export default out;

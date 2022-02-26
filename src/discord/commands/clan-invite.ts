@@ -1,5 +1,6 @@
 
-const Apify = require('apify');
+import Apify from 'apify';
+import { Command } from '.';
 
 async function onMessage(msg){
     // TODO make it work for multiple clans..
@@ -19,8 +20,10 @@ async function onMessage(msg){
             await (async () => {
 
                 const browser = await Apify.launchPuppeteer({
-                    "headless": true,
-                    args: ['--no-sandbox']
+                    launchOptions: {
+                        headless: true,
+                        args: ['--no-sandbox']
+                    }
                 });
                 const page = await browser.newPage();
                 await page.goto('https://faforever.com/login');
@@ -69,10 +72,12 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+const out: Command = {
     name: 'clan',
     description: 'Generate a clan invite link.',
     help: 'This will generate a clan invite link for you. \nUsage: `f/clan username`',
     check: content => content.match(/^clan(.+)/),
     run: onMessage
 }
+
+export default out;

@@ -1,10 +1,10 @@
-let faf = require('../../../faf-api');
-let helper = require('../../../common/helper');
-const models = require('../../../../models');
-const Discord = require('discord.js');
+import faf, { Match } from '../../faf-api';
+import helper from '../../common/helper';
+import models from '../../models';
+import { Command } from '.';
 const FafUser = models.FafUser;
 
-module.exports = {
+const out: Command = {
     name: 'sort',
     description: 'Sort everyone into team channels.',
     help: 'This will get everyone in your current match (which must have started) into separate voice channels based on team. \nUsage: `f/sort`',
@@ -41,7 +41,7 @@ module.exports = {
                 }
             }
             if (! faf_id) {
-                console.log(`Couldn't find FAF ID for ${$msg.author_username}`);
+                console.log(`Couldn't find FAF ID for ${msg.author.username}`);
                 msg.channel.send("I couldn't find your match");
                 return;
             };
@@ -60,9 +60,9 @@ module.exports = {
             msg.channel.send("Hi " + msg.author.username + ", you're in match " + player_match.id);
             console.log('player is in match', player_match.id);
             let match = await faf.getMatch(player_match.id);
-            console.log('match', match.id);
-            if (match && match.teams && match.teams.length) {
-                let size = false
+            if (match !== null && match.teams && match.teams.length) {
+                console.log('match', match.id);
+                let size;
                 if (match.map) {
                     size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
                 }
@@ -73,7 +73,7 @@ module.exports = {
                         inline: true
                     }
                 });
-                let main_fields = [{
+                let main_fields: any[] = [{
                     name: 'Victory Condition',
                     value: match.victoryCondition,
                     inline: true
@@ -87,10 +87,10 @@ module.exports = {
                 }
                 main_fields.push({ name: '\u200B', value: '\u200B' })
                 let report_fields = [...main_fields,...team_fields];
-                let unknown_players = [];
+                let unknown_players: string[] = [];
                 await helper.processArray(match.teams, async function(team){
                     console.log("Team data:", team);
-                    let channel_name = `Team ${team.team} - ${match.name} (temp)`
+                    let channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
                     let parent_id = active_channel.parentId
 
                     if (parseInt(msg.guild.id) === 657376549108187163 && process.env.CHANNEL_PARENT_ID) {
@@ -138,7 +138,6 @@ module.exports = {
                             console.log("No database match for player, trying to find name in active channel") 
                             active_channel.members.forEach(member => {
                                 if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
-                                    user = helper.setFafId(member.id, player.id, msg.channel.guild.id, member.displayName);
                                     found = true;
                                     helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
                                 }
@@ -166,6 +165,8 @@ module.exports = {
                 let embed = {
                     description: description,
                     fields: report_fields,
+                    thumbnail: {},
+                    image: {},
                 };
                 if (match.map && match.map.thumbnailUrlLarge) {
                     embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
@@ -173,10 +174,12 @@ module.exports = {
                         url: encodeURI(match.map.thumbnailUrlLarge)
                     }
                 }
-                await helper.sendLog(msg.guild.id, {embed}, msg);
+                await helper.sendLog(msg.guild.id, embed, msg);
             }
         } catch (e) {
             console.log('caught exception', e);
         }
     }
 }
+
+export default out;

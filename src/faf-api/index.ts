@@ -1,5 +1,21 @@
-const axios = require('axios');
-let helper = require('../common/helper')
+import axios from 'axios';
+import { Data, Game, MapVersion, MapVersionAttributes, Player, PlayerStub, Validity, VictoryCondition } from './types';
+import helper from '../common/helper';
+
+export interface Match {
+    id: string;
+    map: MapVersionAttributes | undefined;
+    teams: Team[];
+    endTime: string;
+    name: string;
+    replayAvailable: boolean;
+    replayTicks: number;
+    replayUrl: string;
+    startTime: string;
+    validity: Validity;
+    victoryCondition: VictoryCondition;
+}
+
 let getPlayerCurrentMatch = async player_id => {
     // Actually gets the most recent match, which might be ended.
     let result;
@@ -39,26 +55,35 @@ let searchUser = async term => {
     }
     return result;
 }
+
+interface Team {
+    team: string;
+    players: {
+        id: string;
+        name: string;
+    }[];
+}
+
 /**
  * Get a match from the api
  * @param match_id
  */
 let getMatch = async match_id => {
-    let match = null;
     try {
-        let game_url = `https://api.faforever.com/data/game/${match_id}?include=playerStats,mapVersion`
-        let res = await axios.get(game_url);
+        const game_url = `https://api.faforever.com/data/game/${match_id}?include=playerStats,mapVersion`
+        const res = await axios.get<Data<Game>>(game_url);
+        let map: MapVersionAttributes | undefined;
+        const teams: Record<string, Team> = {};
         if (res.data) {
             let matchData = res.data;
-            match = matchData.data.attributes;
-            match.id = matchData.data.id;
-            console.log('searched for match id', match_id, 'found match', match.id);
+            const {attributes: match, id, included} = matchData.data;
+            console.log('searched for match id', match_id, 'found match', id);
             let player_in_team = {};
             let query = '';
-            await helper.processArray(res.data.included,item => {
+            await helper.processArray(included, item => {
                 // console.log(item);
                 if (item.type === 'gamePlayerStats') {
-                    let player_id = item.relationships.player.data.id;
+                    let player_id = (item.relationships.player as unknown as Data<PlayerStub>).data.id;
                     let team_no = item.attributes.team - 1;
                     player_in_team[player_id] = team_no;
                     console.log("game has player", player_id, "in team", team_no);
@@ -68,15 +93,14 @@ let getMatch = async match_id => {
                         query = query + ',id==' + player_id;
                     }
                 } else if (item.type === 'mapVersion') {
-                    match.map = item.attributes;
+                    map = (item as MapVersion).attributes;
                 }
-            })
+            });
             let url = `https://api.faforever.com/data/player?filter=${query}&page[size]=16`
-            let player_res = await axios.get(url);
-            let teams = {};
-            console.log('players in match', player_res.data);
-            if (player_res.data && player_res.data.data) {
-                await helper.processArray(player_res.data.data,player => {
+            const { data: players } = await axios.get<Player[]>(url);
+            console.log('players in match', players);
+            if (players) {
+                await helper.processArray(players, player => {
                     if (!teams[player_in_team[player.id]]) {
                         teams[player_in_team[player.id]] = {
                             team: player_in_team[player.id],
@@ -86,18 +110,23 @@ let getMatch = async match_id => {
                     teams[player_in_team[player.id]].players.push({
                         id: player.id,
                         name: player.attributes.login,
-                    })
+                    });
                 })
-                match.teams = Object.values(teams);
+            }
+            return {
+                ...match,
+                id,
+                map: map ? map : undefined,
+                teams: Object.values(teams),
             }
         }
     } catch (e) {
         console.log('err', e);
     }
-    return match
+    return null;
 }
 
-module.exports = {
+export default {
     getPlayerCurrentMatch: getPlayerCurrentMatch,
     searchUser: searchUser,
     getMatch: getMatch,

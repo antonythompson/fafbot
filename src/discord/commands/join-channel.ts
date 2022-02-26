@@ -1,5 +1,7 @@
-const https = require('https');
-const helper = require('../../../common/helper')
+import https from 'https';
+import { Command } from '.';
+import helper from '../../common/helper';
+
 async function onMessage(msg, client){
     try {
         let channel = await msg.channel.guild.channels.create('Team 1 (temp)', {
@@ -12,9 +14,12 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+const out: Command = {
     check: content => content.match(/^join(.+)?/),
     help: '',
     description: '',
-    run: onMessage
+    run: onMessage,
+    name: ''
 }
+
+export default out;

@@ -1,5 +1,6 @@
-let faf = require('../../../faf-api');
-let helper = require('../../../common/helper');
+import faf from '../../faf-api';
+import helper from '../../common/helper';
+import { Command } from '.';
 
 async function onMessage(msg){
     let faf_id,name,user;
@@ -30,10 +31,12 @@ async function onMessage(msg){
     }
 }
 
-module.exports = {
+const out: Command = {
     name: 'set',
     description: 'Set your faf login if different to discord.',
     help: 'Sets your faf name in the bot for automatic channel sorting. \nUsage: `f/set <name>`',
     check: content => content.match(/^set(.+)/),
     run: onMessage
 }
+
+export default out;

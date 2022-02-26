@@ -1,8 +1,6 @@
-'use strict';
+import { DataTypes } from "sequelize";
 
-const { Sequelize, DataTypes } = require("sequelize");
-
-module.exports = (sequelize) => {
+export default (sequelize) => {
     const Guild = sequelize.define('Guild', {
         guild_id: DataTypes.STRING,
         name: DataTypes.STRING,

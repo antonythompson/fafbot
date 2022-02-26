@@ -1,15 +1,19 @@
+import { Client, Intents } from 'discord.js';
+import eventHandlers from './event-handlers';
 
-let helper = require('../common/helper');
-const { Client, Intents } = require('discord.js');
+
 const client = new Client({intents: [
     Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES,
     Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES,
 ]});
-const eventHandlers = require('./event-handlers')
 
 function start(){
 
     client.on('ready', () => {
+        if (client.user === null) {
+            console.warn('user is null');
+            return;
+        }
         console.log(`Logged in as ${client.user.tag}!`);
         // const channel = client.channels.cache.get("720187277355122769");
     });
@@ -25,6 +29,6 @@ function start(){
 }
 
 
-module.exports = {
+export default {
     start: start
 };

@@ -1,10 +1,12 @@
-let helper = require('../common/helper');
-let commands = require('./commands/commands');
-const models = require('../../models');
+import helper from '../common/helper';
+import commands from './commands';
+import models from '../models';
+import Sequelize from 'sequelize';
+import { MessageEmbed } from 'discord.js';
+
 const GuildJoin = models.GuildJoin
-const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const { MessageEmbed } = require('discord.js');
+
 
 function onVoiceStateUpdate(oldThing, newThing){
     //delete temp channels we create when there's nobody in them.
@@ -109,11 +111,11 @@ async function checkHelp(msg){
         if (! msg.content.match(/^f\/help(.+)?/)) {
             return false;
         }
-        let messages = []
+        let messages: string[] = [];
         let commandCheck = msg.content.match(/^f\/help(.+)/)
         let userCommand = commandCheck && commandCheck[1] ? commandCheck[1].trim() : null;
-        let command_help = false;
-        await helper.processArray(commands, (command, index) => {
+        let command_help;
+        await helper.processArray(commands, (command) => {
             let is_command_valid = command && command.description && command.help && command.name
             if (is_command_valid) {
                 if (command.name === userCommand) {
@@ -155,7 +157,7 @@ async function checkHelp(msg){
     }
 }
 
-module.exports = {
+export default {
     onMessage,
     onGuildDelete,
     onVoiceStateUpdate,

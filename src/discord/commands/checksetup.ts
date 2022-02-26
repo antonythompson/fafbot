@@ -1,5 +1,6 @@
-let helper = require('../../../common/helper');
-const models = require('../../../../models');
+import { Command } from '.';
+import helper from '../../common/helper';
+import models from '../../models';
 const Guild = models.Guild;
 
 async function onMessage(msg, client){
@@ -21,11 +22,14 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+const out: Command = {
     name: 'checksetup',
+    help: '',
     description: 'Check the setup for the bot',
     check: content => {
         return content.match(/^checksetup/)
     },
     run: onMessage
 }
+
+export default out;

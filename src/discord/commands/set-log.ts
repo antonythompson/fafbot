@@ -1,5 +1,5 @@
-let helper = require('../../../common/helper');
-const models = require('../../../../models');
+import { Command } from '.';
+import models from '../../models';
 const Guild = models.Guild;
 
 async function onMessage(msg, client){
@@ -19,11 +19,14 @@ async function onMessage(msg, client){
     }
 }
 
-module.exports = {
+const out: Command = {
     name: 'log here',
     description: 'Set the log channel for matches',
     check: content => {
         return content.match(/^log here/)
     },
+    help: '',
     run: onMessage
 }
+
+export default out;

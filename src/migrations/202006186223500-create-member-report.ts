@@ -1,25 +1,32 @@
-'use strict';
-module.exports = {
+
+export default {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('FafUsers', {
+    //RENAME TABLE `fafbot`.`DiscordUsers` TO `fafbot`.`GuildJoins`;
+    //ALTER TABLE `GuildJoins` ADD `leave_date` DATETIME NULL AFTER `join_date`;
+    //ALTER TABLE `guildjoins` DROP `name`;
+    return queryInterface.createTable('GuildJoins', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      faf_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       discord_id: {
         type: Sequelize.STRING,
-        unique: true,
+        unique: false,
         allowNull: false,
       },
       guild_id: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      join_date: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      leave_date: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +39,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('FafUsers');
+    return queryInterface.dropTable('GuildJoins');
   }
 };
