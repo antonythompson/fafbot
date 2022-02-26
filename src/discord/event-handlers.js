@@ -10,7 +10,7 @@ function onVoiceStateUpdate(oldThing, newThing){
     //delete temp channels we create when there's nobody in them.
     if (!(oldThing && oldThing.channel)) { return; }
     if (!oldThing.channel.name.match(/\(temp\)/)) { return; }
-    console.log("Channel:", oldThing.channel.name, "member count:", oldThing.channel.members.size, "deletable?", oldThing.channel.deletable);
+    // console.log("Channel:", oldThing.channel.name, "member count:", oldThing.channel.members.size, "deletable?", oldThing.channel.deletable);
     // if (newThing && oldThing.channelId === newThing.channelId) { return; }
     if (!oldThing.channel.deletable) { return; }
     if (oldThing.channel.members.size === 0) {
