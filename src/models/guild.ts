@@ -1,6 +1,4 @@
-
-
-const { DataTypes } = require("sequelize");
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
     const Guild = sequelize.define('Guild', {

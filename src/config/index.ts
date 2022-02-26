@@ -1,6 +1,7 @@
 
 
-export default {
+export const env = process.env.NODE_ENV || 'development';
+const config = {
   development: {
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
@@ -23,4 +24,5 @@ export default {
     password: process.env.DB_PASSWORD,
     dialect: "postgres",
   }
-}
+};
+export default config[env];

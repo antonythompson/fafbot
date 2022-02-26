@@ -1,6 +1,7 @@
 import https from 'https';
 import { Command } from '.';
-const helper = require('../../common/helper')
+import helper from '../../common/helper';
+
 async function onMessage(msg, client){
     try {
         let channel = await msg.channel.guild.channels.create('Team 1 (temp)', {

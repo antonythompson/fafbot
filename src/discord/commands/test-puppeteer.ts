@@ -1,7 +1,7 @@
 
 import Apify from 'apify';
 import { Command } from '.';
-const fs = require('fs')
+import fs from 'fs';
 
 async function onMessage(msg){
     let name;

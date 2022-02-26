@@ -1,11 +1,10 @@
 import { Sequelize } from 'sequelize';
-import Config from '../config';
+import Config, { env } from '../config';
 import FafUser from './fafuser';
 import Guild from './guild';
 import GuildJoin from './guildjoin';
 
-const env = process.env.NODE_ENV || 'development';
-const config = Config[env];
+const config = Config;
 
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config);

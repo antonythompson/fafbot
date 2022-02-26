@@ -1,10 +1,12 @@
 import helper from '../common/helper';
 import commands from './commands';
 import models from '../models';
-const GuildJoin = models.GuildJoin
 import Sequelize from 'sequelize';
+import { MessageEmbed } from 'discord.js';
+
+const GuildJoin = models.GuildJoin
 const Op = Sequelize.Op;
-const { MessageEmbed } = require('discord.js');
+
 
 function onVoiceStateUpdate(oldThing, newThing){
     //delete temp channels we create when there's nobody in them.
