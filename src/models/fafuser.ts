@@ -7,7 +7,7 @@ interface UserAttributes {
     discord_username: string;
 }
 // Some fields are optional when calling UserModel.create() or UserModel.build()
-interface UserCreationAttributes extends UserAttributes {}
+interface UserCreationAttributes extends Optional<UserAttributes, "faf_id"> {}
 
 // We need to declare an interface for our model that is basically what our class would be
 interface UserInstance
