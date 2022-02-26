@@ -1,9 +1,10 @@
+import { Message } from 'discord.js';
 import { Command } from '.';
 import faf from '../../faf-api';
 import models from '../../models';
 const FafUser = models.FafUser;
 
-async function onMessage(msg){
+async function onMessage(msg: Message<true>){
     let name_result = msg.content.match(/^f\/set(.+)/)
     if (name_result && name_result[1]) {
         let name = name_result[1].trim();
@@ -21,11 +22,12 @@ async function onMessage(msg){
                     faf_id: faf_id
                 })
             } else {
-                user = await FafUser.create({ where: {
-                        discord_id: msg.author.id,
-                        guild_id: msg.guild.id,
-                        faf_id: faf_id
-                    }});
+                user = await FafUser.create({
+                    discord_id: msg.author.id,
+                    guild_id: msg.guild.id,
+                    faf_id: faf_id,
+                    discord_username: '',
+                });
             }
             if (user) {
                 msg.reply('Your faf login has been set')

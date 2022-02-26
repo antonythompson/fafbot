@@ -128,7 +128,7 @@ const out: Command = {
                         // if (faf_users && faf_users.length) {
                         faf_users.forEach(faf_user => {
                             console.log("... faf_user", faf_user.faf_id, "==", player.id, "?");
-                            if (faf_user.faf_id == player.id) {
+                            if ((faf_user.faf_id).toString() == player.id) {
                                 found = true;
                                 helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
                             }

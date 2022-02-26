@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
-interface GuildAttributes {
+export interface GuildAttributes {
     guild_id: string;
     name: string;
     description: string;
@@ -10,7 +10,7 @@ interface GuildAttributes {
     match_log_channel_id: string;
 }
 // Some fields are optional when calling GuildModel.create() or GuildModel.build()
-interface GuildCreationAttributes extends Optional<GuildAttributes, "guild_id"> {}
+interface GuildCreationAttributes extends GuildAttributes {}
 
 // We need to declare an interface for our model that is basically what our class would be
 interface GuildInstance

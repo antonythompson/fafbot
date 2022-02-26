@@ -1,5 +1,6 @@
 import { Collection, Guild, GuildMember, Message } from 'discord.js';
 import models from '../models';
+import { GuildAttributes } from '../models/guild';
 const fafUserModel = models.FafUser;
 const guildModel = models.Guild;
 const GuildJoin = models.GuildJoin;
@@ -52,9 +53,9 @@ const setFafId = async (discord_id, faf_id, guild_id, discord_name) => {
  const sendLog = async (guild_id, message, context) => {
     if (typeof context === 'object' && context.hasOwnProperty('client')) {
         let guild_db = await guildModel.findOne({where: {guild_id}})
-        let guild = context.hasOwnProperty('guild') ? context.guild : context.client.guilds.resolve(guild_id)
+        let guild = context.hasOwnProperty('guild') ? context.guild : context.client.guilds.resolve(guild_id);
         if (guild && guild_db && guild_db.match_log_channel_id) {
-            let channel = guild.channels.cache.find(ch => ch.id === guild_db.match_log_channel_id)
+            let channel = guild.channels.cache.find(ch => ch.id === (guild_db as GuildAttributes).match_log_channel_id)
             if (channel && channel.type === 'GUILD_TEXT') {
                 return channel.send(message)
             }
@@ -92,6 +93,7 @@ const findOrCreateGuild = async guild => {
     let db_guild = await guildModel.findOne({where: {guild_id: guild.id}});
     console.log('guild find', db_guild);
     if (!db_guild) {
+        //@ts-ignore
         db_guild = await guildModel.create({
             guild_id: guild.id,
             name: guild.name,
