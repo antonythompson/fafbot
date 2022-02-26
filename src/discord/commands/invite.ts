@@ -1,6 +1,6 @@
 import { Command } from ".";
 
-const permManager =require('discord-permissions')
+const permManager = require('discord-permissions')
 
 /**
  *
