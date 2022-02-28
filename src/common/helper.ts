@@ -5,13 +5,16 @@ const fafUserModel = models.FafUser;
 const guildModel = models.Guild;
 const GuildJoin = models.GuildJoin;
 
-const getFafId = async (discord_author) => {
-    console.log("getFafId(", discord_author.username, ")");
+let getFafId = async (discord_author) => {
+    console.log("getFafId(", discord_author.username, ") user id ", discord_author.id);
     if (discord_author.id == null) {
+        console.log("... bad id?");
         return null;
     }
     try{
+        console.log("foo!");
         let user = await fafUserModel.findOne({where: {discord_id: discord_author.id}});
+        console.log("... user:", user);
         if (user) {
             return user.faf_id;
         }
@@ -107,11 +110,16 @@ const findOrCreateGuild = async guild => {
 }
 
 const processArray = <T>(items: T[], process: (value: T, index?: string) => void): Promise<void> => {
+    console.log("processArray got items:", items);
+    if (items == null) {
+        items = Array();
+    }
     return new Promise((resolve, reject) => {
         let todo = items.concat();
         const fn = () => {
             process(todo.shift() as T);
             if(todo.length > 0) {
+                // @ts-ignore
                 setTimeout(fn, 25);
             } else {
                 resolve();
