@@ -88,6 +88,7 @@ const out: Command = {
                 main_fields.push({ name: '\u200B', value: '\u200B' })
                 let report_fields = [...main_fields,...team_fields];
                 let unknown_players: string[] = [];
+                console.log("Teams:", match.teams);
                 await helper.processArray(match.teams, async function(team){
                     console.log("Team data:", team);
                     let channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
