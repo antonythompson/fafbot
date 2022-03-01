@@ -1,11 +1,16 @@
 
-export interface Data<T> {
-  data: T;
-  included: FAFObjects[];
+interface Meta {
+  page: Page;
 }
 
-export type PageMeta = {
-  page: object;
+interface Page {
+  number: number;
+  limit: number;
+}
+
+export interface Data<T> {
+  data: T;
+  included?: FAFObjects[];
 }
 
 export interface DataPage<T> {
@@ -27,10 +32,10 @@ export interface DataPage<T> {
 
 type FAFObjects = GameData | GamePlayerStats | MapVersion | Player;
 
-export interface Game {
-  data: GameData;
-  included: FAFObjects[];
-}
+// export interface Game {
+//   data: GameData;
+//   included: FAFObjects[];
+// }
 
 export interface GameData {
   type: 'game';
@@ -128,15 +133,6 @@ interface PlayerStub {
 export interface Player extends PlayerStub {
   attributes: PlayerAttributes;
   meta: Meta;
-}
-
-interface Meta {
-  page: Page;
-}
-
-interface Page {
-  number: number;
-  limit: number;
 }
 
 interface PlayerAttributes {
