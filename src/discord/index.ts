@@ -22,12 +22,12 @@ function start(){
     });
     client.on('messageCreate', onMessage);
     client.on('voiceStateUpdate', onVoiceStateUpdate);
+    client.on('interactionCreate', onInteractionCreate);
     // client.on("guildCreate", eventHandlers.onGuildCreate);
     // client.on("guildDelete", eventHandlers.onGuildDelete);
     // client.on("guildMemberAdd", eventHandlers.onGuildMemberAdd);
     // client.on("guildMemberRemove", eventHandlers.onGuildMemberRemove);
     client.login(process.env.DISCORD_TOKEN);
-    client.on('interactionCreate', onInteractionCreate);
 
 }
 
