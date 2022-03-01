@@ -2,7 +2,6 @@ import { Client, Intents } from 'discord.js';
 import config from '../config';
 import { onMessage, onVoiceStateUpdate, onInteractionCreate } from './event-handlers';
 import register from './registerCommands';
-import  from './event-handlers';
 
 
 const client = new Client({intents: [
@@ -13,7 +12,7 @@ const client = new Client({intents: [
 
 function start(){
 
-    client.on('ready', () => {
+    client.on('ready', async () => {
         if (client.user === null) {
             console.warn('user is null');
             return;

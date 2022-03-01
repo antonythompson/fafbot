@@ -1,14 +1,14 @@
-import https from 'https';
+import { Client, Message } from 'discord.js';
 import { Command } from '.';
 import helper from '../../common/helper';
 
-async function onMessage(msg, client){
+async function onMessage(msg: Message<true>, client: Client){
     try {
         let channel = await msg.channel.guild.channels.create('Team 1 (temp)', {
-            type: 'voice',
+            type: 'GUILD_VOICE',
             reason: 'temp channel for a FAF game'
         });
-        helper.moveUser(client, msg.channel.guild.id, msg.author.id,channel.id);
+        await helper.moveUser(client, msg.channel.guild, msg.author.id,channel.id);
     } catch (e) {
         console.log(e, '^^^ join channel err');
     }

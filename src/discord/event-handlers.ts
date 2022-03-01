@@ -104,7 +104,7 @@ export const onMessage = async (msg: Message) => {
             let content = matched[1]; 
             if (command.check(content, msg)) {
                 console.log(content, 'command matched');
-                command.run(msg, msg.client);
+                command.run(msg as Message<true>, msg.client);
                 done = true;
             }
         });

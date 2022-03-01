@@ -1,4 +1,4 @@
-import { Collection, Guild, GuildMember, Message } from 'discord.js';
+import { Client, Collection, Guild, GuildMember, Message } from 'discord.js';
 import models from '../models';
 import { GuildAttributes } from '../models/guild';
 const fafUserModel = models.FafUser;
@@ -160,19 +160,20 @@ const getUserActiveVoiceChannel = async (msg: Message<true>) => {
     return channel;
 }
 
-const moveUser = (client, guild_id, user_id, voice_channel_id) => {
+const moveUser = async (client: Client, guild_id, user_id, voice_channel_id): Promise<void> => {
     console.log('moving user', user_id, 'in guild', guild_id, 'to voice channel', voice_channel_id);
-    client.guilds
-        .resolve(guild_id)
-        .members.resolve(user_id)
-        .voice.setChannel(voice_channel_id)
-        .catch((err) => {
-            if (err.message !== 'Target user is not connected to voice.') {
-                console.log(err)
-                console.log('Got above error when moving people...')
-            }
-            console.warn(user_id + ' left voice before getting moved')
-        })
+    try {
+        await client.guilds
+            .resolve(guild_id)
+            .members.resolve(user_id)
+            .voice.setChannel(voice_channel_id)
+    } catch (err: unknown) {
+        if ((err as Error).message !== 'Target user is not connected to voice.') {
+            console.log(err)
+            console.log('Got above error when moving people...')
+        }
+        console.warn(user_id + ' left voice before getting moved')
+    }
 }
 
 export default {
