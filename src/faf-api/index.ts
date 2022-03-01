@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { 
     Data, DataPage, GameData, GamePlayerStats, MapVersion, MapVersionAttributes,
-    Player, PlayerStub, Validity, VictoryCondition
+    Player, PlayerStub, Validity, VictoryCondition, FAFObjects
 } from './types';
 import helper from '../common/helper';
 
@@ -83,7 +83,7 @@ let getMatch = async match_id => {
             console.log('match data:', matchData);
             const id = matchData.id;
             const match = matchData.attributes;
-            const included = datastruct.included;
+            const included = <FAFObjects[]>datastruct.included;
             console.log('searched for match id', match_id, 'found match', id);
             let player_in_team = {};
             let query = '';
