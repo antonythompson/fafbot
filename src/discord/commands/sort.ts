@@ -118,7 +118,7 @@ const out: Command = {
                         faf_id: player_ids,
                         guild_id: msg.guild.id
                     }});
-		    // console.log("faf users for those players:", faf_users);
+                    // console.log("faf users for those players:", faf_users);
                     team.players.forEach(player => {
                         console.log("player", player);
                         let found = false;
