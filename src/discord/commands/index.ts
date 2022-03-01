@@ -5,7 +5,7 @@ import sort from "./sort";
 import invite from "./invite";
 import clanInvite from "./clan-invite";
 import testPuppeteer from "./test-puppeteer";
-import { Message, Client } from "discord.js";
+import { Message, CacheType, MessageComponentInteraction, Client } from "discord.js";
 
 
 const out = [

@@ -2,13 +2,13 @@ import helper from '../common/helper';
 import commands from './commands';
 import models from '../models';
 import Sequelize from 'sequelize';
-import { MessageEmbed } from 'discord.js';
+import { CacheType, Guild, GuildMember, Interaction, Message, MessageComponentInteraction, MessageEmbed, VoiceState } from 'discord.js';
 
 const GuildJoin = models.GuildJoin
 const Op = Sequelize.Op;
 
 
-function onVoiceStateUpdate(oldThing, newThing){
+export const onVoiceStateUpdate = async (oldThing: VoiceState, _: VoiceState) => {
     //delete temp channels we create when there's nobody in them.
     if (!(oldThing && oldThing.channel)) { return; }
     if (!oldThing.channel.name.match(/\(temp\)/)) { return; }
@@ -16,7 +16,7 @@ function onVoiceStateUpdate(oldThing, newThing){
     // if (newThing && oldThing.channelId === newThing.channelId) { return; }
     if (!oldThing.channel.deletable) { return; }
     if (oldThing.channel.members.size === 0) {
-        if (! oldThing.guild.channels.cache.find(channel => channel.id === oldThing.channel.id)) {
+        if (! oldThing.guild.channels.cache.find(channel => channel.id === oldThing.channel?.id)) {
             console.log("Channel no exist no more?");
             return;
         }
@@ -29,9 +29,13 @@ function onVoiceStateUpdate(oldThing, newThing){
     }
 }
 
-async function onGuildMemberAdd(member) {
+export const onGuildMemberAdd = async (member: GuildMember) => {
     try{
         if (!member.user.bot) {
+            if (member.joinedTimestamp === null) {
+                console.error('member has no timestamp', member.nickname);
+                return;
+            }
             let data = {
                 join_date: new Date(member.joinedTimestamp),
                 discord_id: member.user.id,
@@ -43,7 +47,7 @@ async function onGuildMemberAdd(member) {
         console.log('error in onGuildCreate', e)
     }
 }
-async function onGuildMemberRemove(member) {
+export const onGuildMemberRemove = async (member: GuildMember) => {
     try{
         let mem = await GuildJoin.findOne({
             where: {
@@ -65,7 +69,7 @@ async function onGuildMemberRemove(member) {
         console.log('error in onGuildCreate', e)
     }
 }
-async function onGuildCreate(guild) {
+export const onGuildCreate = async (guild: Guild) => {
     try{
         console.log("Joined a new guild: " + guild.name);
         let db_guild = await helper.findOrCreateGuild(guild)
@@ -75,7 +79,7 @@ async function onGuildCreate(guild) {
         console.log('error in onGuildCreate', e)
     }
 }
-async function onGuildDelete(guild) {
+export const onGuildDelete = async (guild: Guild) => {
     try{
         console.log("Joined a new guild: " + guild.name);
         let db_guild = await helper.findOrCreateGuild(guild)
@@ -86,7 +90,7 @@ async function onGuildDelete(guild) {
     }
 }
 
-async function onMessage(msg){
+export const onMessage = async (msg: Message) => {
     try {
         if (msg.author.bot || !msg.content.match(/^f\/(.+)/) || await checkHelp(msg)) return;
         const now = new Date();
@@ -94,7 +98,10 @@ async function onMessage(msg){
         let done = false;
         helper.processArray(commands, function(command){
             if (done) return;  // ``
-            let content = msg.content.match(/^f\/(.+)/)[1];
+            if (!msg.content) return;
+            const matched = msg.content.match(/^f\/(.+)/);
+            if (!matched || matched.length < 2) return;
+            let content = matched[1]; 
             if (command.check(content, msg)) {
                 console.log(content, 'command matched');
                 command.run(msg, msg.client);
@@ -106,7 +113,7 @@ async function onMessage(msg){
     }
 }
 
-async function checkHelp(msg){
+export const checkHelp = async (msg: Message) => {
     try{
         if (! msg.content.match(/^f\/help(.+)?/)) {
             return false;
@@ -157,11 +164,15 @@ async function checkHelp(msg){
     }
 }
 
-export default {
-    onMessage,
-    onGuildDelete,
-    onVoiceStateUpdate,
-    onGuildCreate,
-    onGuildMemberAdd,
-    onGuildMemberRemove,
+export const onInteractionCreate = async (interaction: Interaction<CacheType>): Promise<void> => {
+    
+    if (!interaction.isCommand() || !interaction.isMessageComponent()) {
+        return;
+    }
+    const command = commands.filter((command) => command.name === interaction.commandName);
+    if (command.length === 0) {
+        return;
+    }
+    console.log(`message content is: '${interaction.message.content}'`);
+    command[0].run(interaction.message as Message<true>, interaction.client);
 }
