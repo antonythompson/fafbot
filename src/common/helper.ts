@@ -1,10 +1,11 @@
-import { Collection, Guild, GuildMember, Message } from 'discord.js';
+import { Client, Collection, Guild, GuildMember, Message } from 'discord.js';
 import models from '../models';
+import { GuildAttributes } from '../models/guild';
 const fafUserModel = models.FafUser;
 const guildModel = models.Guild;
 const GuildJoin = models.GuildJoin;
 
-let getFafId = async (discord_author) => {
+const getFafId = async (discord_author) => {
     console.log("getFafId(", discord_author.username, ")");
     if (discord_author.id == null) {
         return null;
@@ -20,7 +21,7 @@ let getFafId = async (discord_author) => {
     return null;
 }
 
-let setFafId = async (discord_id, faf_id, guild_id, discord_name) => {
+const setFafId = async (discord_id, faf_id, guild_id, discord_name) => {
     console.log(`setFafId( discord_id ${discord_id}, faf_id ${faf_id}, guild_id ${guild_id}, discord_name ${discord_name})`);
     let user_obj;
     await fafUserModel.findOne({where: {discord_id: discord_id}})
@@ -49,12 +50,12 @@ let setFafId = async (discord_id, faf_id, guild_id, discord_name) => {
  * @param context Message|Presence
  * @returns {Promise<boolean|Message|Array<Message>>}
  */
-let sendLog = async (guild_id, message, context) => {
+ const sendLog = async (guild_id, message, context) => {
     if (typeof context === 'object' && context.hasOwnProperty('client')) {
         let guild_db = await guildModel.findOne({where: {guild_id}})
-        let guild = context.hasOwnProperty('guild') ? context.guild : context.client.guilds.resolve(guild_id)
+        let guild = context.hasOwnProperty('guild') ? context.guild : context.client.guilds.resolve(guild_id);
         if (guild && guild_db && guild_db.match_log_channel_id) {
-            let channel = guild.channels.cache.find(ch => ch.id === guild_db.match_log_channel_id)
+            let channel = guild.channels.cache.find(ch => ch.id === (guild_db as GuildAttributes).match_log_channel_id)
             if (channel && channel.type === 'GUILD_TEXT') {
                 return channel.send(message)
             }
@@ -65,7 +66,7 @@ let sendLog = async (guild_id, message, context) => {
     return false;
 }
 
-let addGuildMembers = async (guild: Guild) => {
+const addGuildMembers = async (guild: Guild) => {
     let added = 0;
     // await processArray(guild.members.cache.array(), async member => {
     await processArray<GuildMember>((guild.members.cache as unknown as GuildMember[]), async member => {
@@ -88,10 +89,11 @@ let addGuildMembers = async (guild: Guild) => {
     return added;
 }
 
-let findOrCreateGuild = async guild => {
+const findOrCreateGuild = async guild => {
     let db_guild = await guildModel.findOne({where: {guild_id: guild.id}});
     console.log('guild find', db_guild);
     if (!db_guild) {
+        //@ts-ignore
         db_guild = await guildModel.create({
             guild_id: guild.id,
             name: guild.name,
@@ -107,19 +109,19 @@ let findOrCreateGuild = async guild => {
 const processArray = <T>(items: T[], process: (value: T, index?: string) => void): Promise<void> => {
     return new Promise((resolve, reject) => {
         let todo = items.concat();
-        setTimeout(function() {
+        const fn = () => {
             process(todo.shift() as T);
             if(todo.length > 0) {
-                // @ts-ignore
-                setTimeout(arguments.callee, 25);
+                setTimeout(fn, 25);
             } else {
                 resolve();
             }
-        }, 25);
+        }
+        setTimeout(fn, 25);
     })
 }
 
-let getChannelByName = async (message, findByName) => {
+const getChannelByName = async (message, findByName) => {
     let voiceChannel = message.guild.channels.find((channel) => channel.id === findByName)
     if (voiceChannel === null) {
         voiceChannel = message.guild.channels.find(
@@ -129,7 +131,7 @@ let getChannelByName = async (message, findByName) => {
     return voiceChannel
 }
 
-let getObjectValues = (array, key) => {
+const getObjectValues = (array, key) => {
     return array.map(function(value, index) {
         return value[key];
     })
@@ -140,7 +142,7 @@ let getObjectValues = (array, key) => {
  * @param msg
  * @returns {Promise<Channel>}
  */
-let getUserActiveVoiceChannel = async (msg: Message<true>) => {
+const getUserActiveVoiceChannel = async (msg: Message<true>) => {
     let channel;
     console.log("getUserActiveVoiceChannel( message ", msg.id, ")");
     msg.channel.guild.channels.cache.forEach((ch) => {
@@ -158,19 +160,20 @@ let getUserActiveVoiceChannel = async (msg: Message<true>) => {
     return channel;
 }
 
-let moveUser = (client, guild_id, user_id, voice_channel_id) => {
+const moveUser = async (client: Client, guild_id, user_id, voice_channel_id): Promise<void> => {
     console.log('moving user', user_id, 'in guild', guild_id, 'to voice channel', voice_channel_id);
-    client.guilds
-        .resolve(guild_id)
-        .members.resolve(user_id)
-        .voice.setChannel(voice_channel_id)
-        .catch((err) => {
-            if (err.message !== 'Target user is not connected to voice.') {
-                console.log(err)
-                console.log('Got above error when moving people...')
-            }
-            console.warn(user_id + ' left voice before getting moved')
-        })
+    try {
+        await client.guilds
+            .resolve(guild_id)
+            .members.resolve(user_id)
+            .voice.setChannel(voice_channel_id)
+    } catch (err: unknown) {
+        if ((err as Error).message !== 'Target user is not connected to voice.') {
+            console.log(err)
+            console.log('Got above error when moving people...')
+        }
+        console.warn(user_id + ' left voice before getting moved')
+    }
 }
 
 export default {
