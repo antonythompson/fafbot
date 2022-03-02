@@ -2,8 +2,7 @@
 import { Sequelize } from 'sequelize';
 
 let connection = new Sequelize(
-    // process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASS,
-    'fafbot', 'brackman', 'socket',
+    process.env.DB_DATABASE as string, process.env.DB_USER, process.env.DB_PASS,
     { dialect: 'postgres', dialectOptions: {
         socketPath: '/tmp/.s.PGSQL.5432'
     }}
