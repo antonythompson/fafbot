@@ -16,12 +16,9 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
-module.exports = {
-    connection: db,
-    FafUser: FafUser,
-    Guild: Guild,
-    GuildJoin: GuildJoin,
+export default {
+    FafUser: FafUser(sequelize),
+    Guild: Guild(sequelize),
+    GuildJoin: GuildJoin(sequelize),
 };
