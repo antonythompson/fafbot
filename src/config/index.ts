@@ -7,6 +7,8 @@ const config = {
     database: process.env.DB_DATABASE,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    discordToken: process.env.DISCORD_TOKEN,
+    clientId: process.env.FAF_DISCORD_APP_ID,
     dialect: "postgres",
     logging: console.log
   },
@@ -15,6 +17,8 @@ const config = {
     database: process.env.DB_DATABASE,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    discordToken: process.env.DISCORD_TOKEN,
+    clientId: process.env.FAF_DISCORD_APP_ID,
     dialect: "postgres",
   },
   production: {
@@ -22,6 +26,8 @@ const config = {
     database: process.env.DB_DATABASE,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    discordToken: process.env.DISCORD_TOKEN,
+    clientId: process.env.FAF_DISCORD_APP_ID,
     dialect: "postgres",
   }
 };

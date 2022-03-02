@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import Config, { env } from '../config';
+import Config from '../config';
 import FafUser from './fafuser';
 import Guild from './guild';
 import GuildJoin from './guildjoin';

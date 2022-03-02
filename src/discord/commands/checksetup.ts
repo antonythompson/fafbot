@@ -29,7 +29,7 @@ const out: Command = {
     check: content => {
         return content.match(/^checksetup/)
     },
-    run: onMessage
+    run: onMessage,
 }
 
 export default out;

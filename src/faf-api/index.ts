@@ -42,7 +42,7 @@ let getPlayerCurrentMatch = async player_id => {
     }
     return result;
 }
-let searchUser = async term => {
+let searchUser = async (term): Promise<number> => {
     let result;
     try{
         let url = `https://api.faforever.com/data/player?filter=login=="${term}"&page[size]=1`
