@@ -1,8 +1,9 @@
-
+import { config } from 'dotenv';
+config();
 
 export const env = process.env.NODE_ENV || 'development';
 console.log("Database:", process.env.DB_DATABASE);
-const config = {
+const config_obj = {
   development: {
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
@@ -15,7 +16,7 @@ const config = {
   },
   test: {
     host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_DATABASE as string,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     discordToken: process.env.DISCORD_TOKEN,
@@ -23,9 +24,8 @@ const config = {
     dialect: "postgres",
   },
   production: {
-    host: '/tmp/.s.PGSQL.5432',
-    // host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE as string,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     discordToken: process.env.DISCORD_TOKEN,
@@ -34,4 +34,4 @@ const config = {
     dialectOptions: { socketPath: '/tmp/.s.PGSQL.5432' },
   }
 };
-export default config[env];
+export default config_obj[env];
