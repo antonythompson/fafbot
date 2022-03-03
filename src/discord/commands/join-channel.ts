@@ -8,7 +8,7 @@ async function onMessage(msg, client){
             type: 'voice',
             reason: 'temp channel for a FAF game'
         });
-        helper.moveUser(client, msg.channel.guild.id, msg.author.id,channel.id);
+        await helper.moveUser(client, msg.channel.guild.id, msg.author.id,channel.id);
     } catch (e) {
         console.log(e, '^^^ join channel err');
     }
