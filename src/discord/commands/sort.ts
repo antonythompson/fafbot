@@ -57,125 +57,125 @@ const out: Command = {
                 msg.channel.send("I couldn't find the players in the match.");
                 return;
             };
-            msg.channel.send("Hi " + msg.author.username + ", you're in match " + player_match.id);
-            console.log('player is in match', player_match.id);
             let match = await faf.getMatch(player_match.id);
-            if (match !== null && match.teams && match.teams.length) {
-                console.log('match', match.id);
-                let size;
-                if (match.map) {
-                    size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
-                }
-                let team_fields = match.teams.map(team => {
-                    return {
-                        name: 'Team ' + team.team,
-                        value: helper.getObjectValues(team.players, 'name').join('\n'),
-                        inline: true
-                    }
-                });
-                let main_fields: any[] = [{
-                    name: 'Victory Condition',
-                    value: match.victoryCondition,
-                    inline: true
-                }];
-                if (size) {
-                    main_fields.push({
-                        name: 'Size',
-                        value: size,
-                        inline: true
-                    })
-                }
-                main_fields.push({ name: '\u200B', value: '\u200B' })
-                let report_fields = [...main_fields,...team_fields];
-                let unknown_players: string[] = [];
-                await helper.processArray(match.teams, async function(team){
-                    console.log("Team data:", team);
-                    let channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
-                    let parent_id = active_channel.parentId
-
-                    if (parseInt(msg.guild.id) === 657376549108187163 && process.env.CHANNEL_PARENT_ID) {
-                        parent_id = process.env.CHANNEL_PARENT_ID
-                    }
-                    let channel_exists = await msg.channel.guild.channels.cache.find(
-                        channel => channel.name === channel_name
-                    );
-                    let channel;
-                    if (channel_exists) {
-                        channel = channel_exists;
-                    } else {
-                        channel = await msg.channel.guild.channels.create(channel_name, {
-                            type: 'GUILD_VOICE',
-                            reason: 'temp channel for a FAF game',
-                            parent: parent_id
-                        });
-                        console.log("Created new channel", channel.id, "named", channel_name);
-                    // } else {
-                    //     msg.reply(`I've found channel ${channel_name} for you, moving you there`);
-                    //     channel = channel_exists;
-                    //     helper.moveUser(client, channel.guild.id, msg.author.id, channel.id);
-                    //     console.log(`Channel ${channel_name} existed, moved ${msg.author.username} straight there.`);
-                    }
-                    let player_ids = helper.getObjectValues(team.players, 'id')
-                    console.log("players to sort into this channel:", player_ids);
-                    let faf_users = await FafUser.findAll({ where: {
-                        faf_id: player_ids,
-                        guild_id: msg.guild.id
-                    }});
-                    console.log("faf users for those players:", faf_users);
-                    team.players.forEach(player => {
-                        console.log("player", player);
-                        let found = false;
-                        // if (faf_users && faf_users.length) {
-                        faf_users.forEach(faf_user => {
-                            console.log("... faf_user", faf_user.faf_id, "==", player.id, "?");
-                            if ((faf_user.faf_id).toString() == player.id) {
-                                found = true;
-                                helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
-                            }
-                        });
-                        // }
-                        if (!found) {
-                            console.log("No database match for player, trying to find name in active channel") 
-                            active_channel.members.forEach(member => {
-                                if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
-                                    found = true;
-                                    helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
-                                }
-                            });
-                            if (!found) {
-                                console.log("... couldn't find player", player.name, "in channel, sending f/set message");
-                                // msg.channel.send(`I couldn't find a discord ID for FAF player '${player.name}' - if that's you, issue \`f\/set ${player.name}\` to fix this`);
-                                unknown_players.push(player.name);
-                            }
-                        }
-                    })
-                });
-                if (unknown_players.length) {
-                    await msg.channel.send(
-                        "I couldn't find Discord usernames for the following FAF players: " +
-                        unknown_players.join(', ') +
-                        " - if you're one of those people, issue `f/set` with your FAF username."
-                    );
-                }
-                let description = 'Map generator match'
-                if (match.map && match.map.description) { //map generator doesn't include the map object
-                    description = match.map.description
-                }
-
-                let embed = {
-                    description: description,
-                    fields: report_fields,
-                    thumbnail: {},
-                    image: {},
-                };
-                if (match.map && match.map.thumbnailUrlLarge) {
-                    embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
-                    embed.image = {
-                        url: encodeURI(match.map.thumbnailUrlLarge)
-                    }
-                }
-                await helper.sendLog(msg.guild.id, embed, msg);
+            if (!(match !== null && match.teams && match.teams.length)) {
+                console.log(`couldn't find match with id ${player_match.id}`);
+                return;
             }
+            match = <Match>match;
+            msg.channel.send("Hi " + msg.author.username + ", you're in match " + match.name);
+            console.log('player is in match', match.id, 'name', match.name);
+            let size;
+            if (match.map) {
+                size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
+            }
+            let team_fields = match.teams.map(team => {
+                return {
+                    name: 'Team ' + team.team,
+                    value: helper.getObjectValues(team.players, 'name').join('\n'),
+                    inline: true
+                }
+            });
+            let main_fields: any[] = [{
+                name: 'Victory Condition',
+                value: match.victoryCondition,
+                inline: true
+            }];
+            if (size) {
+                main_fields.push({
+                    name: 'Size',
+                    value: size,
+                    inline: true
+                })
+            }
+            main_fields.push({ name: '\u200B', value: '\u200B' })
+            let report_fields = [...main_fields,...team_fields];
+            let unknown_players: string[] = [];
+            console.log("Teams:", match.teams);
+            await helper.processArray(match.teams, async function(team){
+                // console.log("Team data:", team);
+                let channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
+                let parent_id = active_channel.parentId
+
+                if (parseInt(msg.guild.id) === 657376549108187163 && process.env.CHANNEL_PARENT_ID) {
+                    parent_id = process.env.CHANNEL_PARENT_ID
+                }
+                let channel_exists = await msg.channel.guild.channels.cache.find(
+                    channel => channel.name === channel_name
+                );
+                // console.log("exists:", channel_exists);
+                let channel;
+                if (channel_exists) {
+                    channel = channel_exists;
+                    console.log("Found existing channel", channel.id, "named", channel.name);
+                } else {
+                    channel = await msg.channel.guild.channels.create(channel_name, {
+                        type: 'GUILD_VOICE',
+                        reason: 'temp channel for a FAF game',
+                        parent: parent_id
+                    });
+                    console.log("Created new channel", channel.id, "named", channel.name);
+                }
+                let player_ids = helper.getObjectValues(team.players, 'id')
+                console.log("players to sort into this channel:", player_ids);
+                let faf_users = await FafUser.findAll({ where: {
+                    faf_id: player_ids,
+                    guild_id: msg.guild.id
+                }});
+                // console.log("faf users for those players:", faf_users);
+                await Promise.all(team.players.map(async player => {
+                    console.log("player", player);
+                    let found = false;
+                    // if (faf_users && faf_users.length) {
+                    await Promise.all(faf_users.map(async faf_user => {
+                        if ((faf_user.faf_id).toString() == player.id) {
+                            found = true;
+                            await helper.moveUser(client, msg.channel.guild.id, faf_user.discord_id, channel.id);
+                        }
+                    }));
+                    // }
+                    if (!found) {
+                        console.log("No database match for player", player.id, ", trying to find name in active channel") 
+                        await Promise.all(active_channel.members.map(async member => {
+                            if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
+                                found = true;
+                                await helper.setFafId(member.id, player.id, msg.guild.id, member.displayName);
+                                await helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
+                            }
+                        }));
+                        if (!found) {
+                            console.log("... couldn't find player", player.name, "in channel, sending f/set message");
+                            // msg.channel.send(`I couldn't find a discord ID for FAF player '${player.name}' - if that's you, issue \`f\/set ${player.name}\` to fix this`);
+                            unknown_players.push(player.name);
+                        }
+                    }
+                }));
+            });
+            if (unknown_players.length) {
+                await msg.channel.send(
+                    "I couldn't find Discord usernames for the following FAF players: " +
+                    unknown_players.join(', ') +
+                    " - if you're one of those people, issue `f/set` with your FAF username."
+                );
+            }
+            let description = 'Map generator match'
+            if (match.map && match.map.description) { //map generator doesn't include the map object
+                description = match.map.description
+            }
+
+            let embed = {
+                description: description,
+                fields: report_fields,
+                thumbnail: {},
+                image: {},
+            };
+            if (match.map && match.map.thumbnailUrlLarge) {
+                embed.thumbnail = {url: encodeURI(match.map.thumbnailUrlLarge)};
+                embed.image = {
+                    url: encodeURI(match.map.thumbnailUrlLarge)
+                }
+            }
+            await helper.sendLog(msg.guild.id, embed, msg);
         } catch (e) {
             console.log('caught exception', e);
         }

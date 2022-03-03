@@ -3,7 +3,6 @@ import config from '../config';
 import { onMessage, onVoiceStateUpdate, onInteractionCreate } from './event-handlers';
 import register from './registerCommands';
 
-
 const client = new Client({intents: [
     Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES,
     Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES,
@@ -23,13 +22,12 @@ function start(){
     });
     client.on('messageCreate', onMessage);
     client.on('voiceStateUpdate', onVoiceStateUpdate);
+    client.on('interactionCreate', onInteractionCreate);
     // client.on("guildCreate", eventHandlers.onGuildCreate);
     // client.on("guildDelete", eventHandlers.onGuildDelete);
     // client.on("guildMemberAdd", eventHandlers.onGuildMemberAdd);
     // client.on("guildMemberRemove", eventHandlers.onGuildMemberRemove);
-    // console.log("Token:", process.env.DISCORD_TOKEN);
     client.login(process.env.DISCORD_TOKEN);
-    client.on('interactionCreate', onInteractionCreate);
 
 }
 

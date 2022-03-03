@@ -6,19 +6,19 @@ import GuildJoin from './guildjoin';
 
 const config = Config;
 
+require("dotenv").config();
+const db = {};
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-const fafUser = FafUser(sequelize)
-const guild = Guild(sequelize)
-const guildJoin = GuildJoin(sequelize)
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
 export default {
-    // connection: {
-    //   sequelize,
-    //   Sequelize
-    // },
-    FafUser: fafUser,
-    Guild: guild,
-    GuildJoin: guildJoin,
+    FafUser: FafUser(sequelize),
+    Guild: Guild(sequelize),
+    GuildJoin: GuildJoin(sequelize),
 };
