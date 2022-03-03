@@ -130,7 +130,7 @@ const out: Command = {
                     await Promise.all(faf_users.map(async faf_user => {
                         if ((faf_user.faf_id).toString() == player.id) {
                             found = true;
-                            await helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
+                            await helper.moveUser(client, msg.channel.guild.id, faf_user.discord_id, channel.id);
                         }
                     }));
                     // }
@@ -139,6 +139,7 @@ const out: Command = {
                         await Promise.all(active_channel.members.map(async member => {
                             if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
                                 found = true;
+                                await helper.setFafId(member.id, player.id, msg.guild.id, member.displayName);
                                 await helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
                             }
                         }));
