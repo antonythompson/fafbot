@@ -123,32 +123,32 @@ const out: Command = {
                     guild_id: msg.guild.id
                 }});
                 // console.log("faf users for those players:", faf_users);
-                team.players.forEach(player => {
+                await Promise.all(team.players.map(async player => {
                     console.log("player", player);
                     let found = false;
                     // if (faf_users && faf_users.length) {
-                    faf_users.forEach(faf_user => {
+                    await Promise.all(faf_users.map(async faf_user => {
                         if ((faf_user.faf_id).toString() == player.id) {
                             found = true;
-                            helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
+                            await helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
                         }
-                    });
+                    }));
                     // }
                     if (!found) {
                         console.log("No database match for player", player.id, ", trying to find name in active channel") 
-                        active_channel.members.forEach(member => {
+                        await Promise.all(active_channel.members.map(async member => {
                             if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
                                 found = true;
-                                helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
+                                await helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
                             }
-                        });
+                        }));
                         if (!found) {
                             console.log("... couldn't find player", player.name, "in channel, sending f/set message");
                             // msg.channel.send(`I couldn't find a discord ID for FAF player '${player.name}' - if that's you, issue \`f\/set ${player.name}\` to fix this`);
                             unknown_players.push(player.name);
                         }
                     }
-                })
+                }));
             });
             if (unknown_players.length) {
                 await msg.channel.send(
