@@ -94,7 +94,7 @@ const out: Command = {
             const report_fields = [...main_fields, ...team_fields];
             const unknown_players: string[] = [];
             console.log("Teams:", match.teams);
-            await helper.processArray(match.teams, async function (team) {
+            await Promise.all(match.teams.map(async function(team) {
                 // console.log("Team data:", team);
                 const channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
                 let parent_id = active_channel.parentId
@@ -157,7 +157,8 @@ const out: Command = {
                         }
                     }
                 }));
-            });
+            })); // await promise map teams
+            console.log("unknown players:", unknown_players);
             if (unknown_players.length) {
                 await msg.channel.send(
                     "I couldn't find Discord usernames for the following FAF players: " +
