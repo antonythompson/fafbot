@@ -10,5 +10,13 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/no-floating-promises': 'error',
-  }
+  },
+  overrides: [
+    {
+      files: ['*.ts'],
+      parserOptions: {
+        project: ['./tsconfig.json']
+      }
+    }
+  ]
 };
