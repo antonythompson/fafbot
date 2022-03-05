@@ -1,17 +1,17 @@
-import { Client, Collection, Guild, GuildMember, Message } from 'discord.js';
+import { Client, Collection, Guild, GuildMember, Message, MessageEmbed } from 'discord.js';
 import models from '../models';
 import { GuildAttributes } from '../models/guild';
 const fafUserModel = models.FafUser;
 const guildModel = models.Guild;
 const GuildJoin = models.GuildJoin;
 
-let getFafId = async (discord_author) => {
+const getFafId = async (discord_author) => {
     console.log("getFafId(", discord_author.username, ") user id ", discord_author.id);
     if (discord_author.id == null) {
         return null;
     }
     try{
-        let user = await fafUserModel.findOne({where: {discord_id: discord_author.id}});
+        const user = await fafUserModel.findOne({where: {discord_id: discord_author.id}});
         if (user) {
             return user.faf_id;
         }
@@ -50,17 +50,17 @@ const setFafId = async (discord_id, faf_id, guild_id, discord_name) => {
  * @param context Message|Presence
  * @returns {Promise<boolean|Message|Array<Message>>}
  */
- const sendLog = async (guild_id, message, context) => {
-    if (typeof context === 'object' && context.hasOwnProperty('client')) {
-        let guild_db = await guildModel.findOne({where: {guild_id}})
-        let guild = context.hasOwnProperty('guild') ? context.guild : context.client.guilds.resolve(guild_id);
+ const sendLog = async (guild_id, message: string | MessageEmbed, context: Message<true>) => {
+    if (typeof context === 'object' && context.client) {
+        const guild_db = await guildModel.findOne({where: {guild_id}})
+        const guild = context.guild ? context.guild : context.client.guilds.resolve(guild_id);
         if (guild && guild_db && guild_db.match_log_channel_id) {
-            let channel = guild.channels.cache.find(ch => ch.id === (guild_db as GuildAttributes).match_log_channel_id)
+            const channel = guild.channels.cache.find(ch => ch.id === (guild_db as GuildAttributes).match_log_channel_id)
             if (channel && channel.type === 'GUILD_TEXT') {
-                return channel.send(message)
+                return channel.send(message.toString());
             }
-        } else if (guild && context.hasOwnProperty('channel') && context.type === 'GUILD_TEXT') {
-            return context.send(message)
+        } else if (guild && context.channel && context.channel.type === 'GUILD_TEXT') {
+            return context.channel.send(message.toString())
         }
     }
     return false;
@@ -72,15 +72,15 @@ const addGuildMembers = async (guild: Guild) => {
     await processArray<GuildMember>((guild.members.cache as unknown as GuildMember[]), async member => {
         if (!member.user.bot && member.joinedTimestamp !== null) {
             console.log(new Date(member.joinedTimestamp));
-            let data = {
+            const data = {
                 join_date: new Date(member.joinedTimestamp),
             };
-            let where = {
+            const where = {
                 discord_id: member.user.id,
                 guild_id: member.guild.id,
             }
             console.log('data', where, data);
-            let res = await GuildJoin.findOrCreate({where: where, defaults: data})
+            const res = await GuildJoin.findOrCreate({where: where, defaults: data})
             if (res && res[1]) {
                 added++;
             }
@@ -89,30 +89,29 @@ const addGuildMembers = async (guild: Guild) => {
     return added;
 }
 
-const findOrCreateGuild = async guild => {
+const findOrCreateGuild = async (guild: Guild) => {
     let db_guild = await guildModel.findOne({where: {guild_id: guild.id}});
     console.log('guild find', db_guild);
     if (!db_guild) {
-        //@ts-ignore
         db_guild = await guildModel.create({
             guild_id: guild.id,
             name: guild.name,
-            description: guild.description,
-            icon: guild.icon,
-            banner: guild.banner,
-            region: guild.region,
+            description: guild.description ?? '',
+            icon: guild.icon ?? '',
+            banner: guild.banner ?? '',
+            region: '',
+            match_log_channel_id: '',
         });
     }
     return db_guild;
 }
 
 const processArray = <T>(items: T[], process: (value: T, index?: string) => void): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        let todo = items.concat();
+    return new Promise((resolve) => {
+        const todo = items.concat();
         const fn = () => {
             process(todo.shift() as T);
             if(todo.length > 0) {
-                // @ts-ignore
                 setTimeout(fn, 25);
             } else {
                 resolve();
@@ -133,7 +132,7 @@ const getChannelByName = async (message, findByName) => {
 }
 
 const getObjectValues = (array, key) => {
-    return array.map(function(value, index) {
+    return array.map(function(value) {
         return value[key];
     })
 }

@@ -7,7 +7,7 @@ import commands, { Command } from './commands';
 const rest = new REST({ version: '9' }).setToken(config.discordToken);
 
 const buildSlash = (appCommands: `/applications/${string}/guilds/${string}/commands`) => async ({name, description}: Command) => {
-  rest.put(
+  await rest.put(
     appCommands,
     {
       body: new SlashCommandBuilder()
