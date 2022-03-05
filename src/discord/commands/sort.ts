@@ -2,6 +2,7 @@ import faf, { Match } from '../../faf-api';
 import helper from '../../common/helper';
 import models from '../../models';
 import { Command } from '.';
+import { Client, Message } from 'discord.js';
 const FafUser = models.FafUser;
 
 const out: Command = {
@@ -9,9 +10,13 @@ const out: Command = {
     description: 'Sort everyone into team channels.',
     help: 'This will get everyone in your current match (which must have started) into separate voice channels based on team. \nUsage: `f/sort`',
     check: content => content.match(/^sort(.+)?/),
-    run: async (msg, client) => {
+    run: async (msg: Message<true>, client: Client) => {
         console.log("Got to start of sort routine");
-
+        let description: string = 'Map generator match';
+        let embed: {
+            description: string,
+            
+        };
         try{
 
             let active_channel = await helper.getUserActiveVoiceChannel(msg);
@@ -161,7 +166,6 @@ const out: Command = {
                         " - if you're one of those people, issue `f/set` with your FAF username."
                     );
                 }
-                let description = 'Map generator match'
                 if (match.map && match.map.description) { //map generator doesn't include the map object
                     description = match.map.description
                 }
@@ -177,8 +181,7 @@ const out: Command = {
                     embed.image = {
                         url: encodeURI(match.map.thumbnailUrlLarge)
                     }
-                }));
-            });
+                };
             if (unknown_players.length) {
                 await msg.channel.send(
                     "I couldn't find Discord usernames for the following FAF players: " +
@@ -186,12 +189,12 @@ const out: Command = {
                     " - if you're one of those people, issue `f/set` with your FAF username."
                 );
             }
-            let description = 'Map generator match'
+            description = 'Map generator match'
             if (match.map && match.map.description) { //map generator doesn't include the map object
                 description = match.map.description
             }
 
-            let embed = {
+            embed = {
                 description: description,
                 fields: report_fields,
                 thumbnail: {},
