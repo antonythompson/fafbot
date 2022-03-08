@@ -94,7 +94,7 @@ const out: Command = {
             const report_fields = [...main_fields, ...team_fields];
             const unknown_players: string[] = [];
             console.log("Teams:", match.teams);
-            await Promise.all(match.teams.map(async function(team) {
+            await Promise.allSettled(match.teams.map(async function(team) {
                 // console.log("Team data:", team);
                 const channel_name = `Team ${team.team} - ${(match as Match).name} (temp)`
                 let parent_id = active_channel.parentId
@@ -129,22 +129,29 @@ const out: Command = {
                         guild_id: msg.guild.id
                     }
                 });
-                console.log("faf users for those players:", faf_users);
-                await Promise.all(team.players.map(async player => {
+                // console.log("faf users for those players:", faf_users);
+                const discord_id_of_faf_user = new Map();
+                faf_users.map(faf_user => {
+                    discord_id_of_faf_user.set(faf_user.faf_id.toString(), faf_user.discord_id);
+                });
+                const team_move_statuses = await Promise.allSettled(team.players.map(async player => {
                     console.log("player", player);
                     let found = false;
-                    // if (faf_users && faf_users.length) {
-                    await Promise.all(faf_users.map(async faf_user => {
-                        console.log("... faf_user", faf_user.faf_id, "==", player.id, "?");
-                        if ((faf_user.faf_id).toString() == player.id) {
-                            found = true;
-                            await helper.moveUser(client, msg.channel.guild.id, msg.author.id, channel.id);
-                        }
-                    }));
-                    // }
-                    if (!found) {
+                    // // if (faf_users && faf_users.length) {
+                    // await Promise.allSettled(faf_users.map(async faf_user => {
+                    //     if ((faf_user.faf_id).toString() == player.id) {
+                    //         found = true;
+                    //         await helper.moveUser(client, msg.channel.guild.id, faf_user.discord_id, channel.id);
+                    //     }
+                    // }));
+                    // // }
+                    // if (!found) {
+                    if (discord_id_of_faf_user.has(player.id.toString())) {
+                        const discord_id = discord_id_of_faf_user.get(player.id.toString());
+                        await helper.moveUser(client, msg.channel.guild.id, discord_id, channel.id);
+                    } else {
                         console.log("No database match for player, trying to find name in active channel")
-                        await Promise.all(active_channel.members.map(async member => {
+                        await Promise.allSettled(active_channel.members.map(async member => {
                             if (member.displayName.toLowerCase() === player.name.toLowerCase()) {
                                 found = true;
                                 await helper.moveUser(client, msg.channel.guild.id, member.id, channel.id);
@@ -156,7 +163,7 @@ const out: Command = {
                             unknown_players.push(player.name);
                         }
                     }
-                }));
+                })); // await promise team player moves
             })); // await promise map teams
             console.log("unknown players:", unknown_players);
             if (unknown_players.length) {
