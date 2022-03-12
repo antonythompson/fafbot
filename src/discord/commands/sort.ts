@@ -137,17 +137,9 @@ const out: Command = {
                 const team_move_statuses = await Promise.allSettled(team.players.map(async player => {
                     console.log("player", player);
                     let found = false;
-                    // // if (faf_users && faf_users.length) {
-                    // await Promise.allSettled(faf_users.map(async faf_user => {
-                    //     if ((faf_user.faf_id).toString() == player.id) {
-                    //         found = true;
-                    //         await helper.moveUser(client, msg.channel.guild.id, faf_user.discord_id, channel.id);
-                    //     }
-                    // }));
-                    // // }
-                    // if (!found) {
-                    if (discord_id_of_faf_user.has(player.id.toString())) {
-                        const discord_id = discord_id_of_faf_user.get(player.id.toString());
+                    const player_id = player.id.toString();
+                    if (discord_id_of_faf_user.has(player_id)) {
+                        const discord_id = discord_id_of_faf_user.get(player_id);
                         await helper.moveUser(client, msg.channel.guild.id, discord_id, channel.id);
                     } else {
                         console.log("No database match for player, trying to find name in active channel")
@@ -173,28 +165,6 @@ const out: Command = {
                     " - if you're one of those people, issue `f/set` with your FAF username."
                 );
             }
-            if (match.map && match.map.description) { //map generator doesn't include the map object
-                description = match.map.description
-            }
-
-            if (match.map && match.map.thumbnailUrlLarge) {
-                embed = {
-                    description: description,
-                    fields: report_fields,
-                    thumbnail: { url: encodeURI(match.map.thumbnailUrlLarge) },
-                    image: {
-                        url: encodeURI(match.map.thumbnailUrlLarge)
-                    }
-                };
-            }
-            if (unknown_players.length) {
-                await msg.channel.send(
-                    "I couldn't find Discord usernames for the following FAF players: " +
-                    unknown_players.join(', ') +
-                    " - if you're one of those people, issue `f/set` with your FAF username."
-                );
-            }
-            description = 'Map generator match'
             if (match.map && match.map.description) { //map generator doesn't include the map object
                 description = match.map.description
             }
