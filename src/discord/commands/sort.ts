@@ -5,6 +5,32 @@ import { Command } from '.';
 import { Client, Message, MessageEmbed, MessageEmbedOptions } from 'discord.js';
 const FafUser = models.FafUser;
 
+function start_match_embed(match) {
+    const team_fields = match.teams.map(team => {
+        return {
+            name: 'Team ' + team.team,
+            value: helper.getObjectValues(team.players, 'name').join('\n'),
+            inline: true
+        }
+    });
+    const main_fields: any[] = [{
+        name: 'Victory Condition',
+        value: match.victoryCondition,
+        inline: true
+    }];
+    if (match.map) {
+        const size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
+        main_fields.push({
+            name: 'Size',
+            value: size,
+            inline: true
+        })
+    }
+    main_fields.push({ name: '\u200B', value: '\u200B' })
+    const report_fields = [...main_fields, ...team_fields];
+    return report_fields
+}
+
 const out: Command = {
     name: 'sort',
     description: 'Sort everyone into team channels.',
@@ -30,25 +56,13 @@ const out: Command = {
                 return;
             }
 
-            let faf_id = await helper.getFafId(msg.author);
-            if (!faf_id) {
-                console.log("FAF ID of", msg.author.username, "returned", faf_id, ", searching");
-                faf_id = await faf.searchUser(msg.author.username);
-                if (faf_id) {
-                    await helper.setFafId(msg.author.id, faf_id, msg.guild.id, msg.author.username);
-                } else {
-                    console.log(`Couldn't find FAF username for ${msg.author.username}`);
-                    await msg.reply("I couldn't find your FAF username. Please set it, eg `f/set " + msg.author.username + '`')
-                    return;
-                }
-            }
+            let faf_id = await helper.getFafIdOrSearch(msg);
             if (!faf_id) {
                 console.log(`Couldn't find FAF ID for ${msg.author.username}`);
-                await msg.channel.send("I couldn't find your match");
+                await msg.reply("I couldn't find your FAF username. Please set it, eg `f/set " + msg.author.username + '`')
                 return;
             }
             console.log('searching for last match for ', faf_id);
-            // let bot_promise = msg.channel.send('Tracking your match')
             const player_match = await faf.getPlayerCurrentMatch(faf_id);
             if (player_match) {
                 if (player_match.attributes.endTime !== null) {
@@ -67,31 +81,7 @@ const out: Command = {
             match = <Match>match;
             await msg.channel.send("Hi " + msg.author.username + ", you're in match " + match.name);
             console.log('player is in match', match.id, 'name', match.name);
-            let size;
-            if (match.map) {
-                size = (match.map.width / 51.2) + 'x' + (match.map.height / 51.2);
-            }
-            const team_fields = match.teams.map(team => {
-                return {
-                    name: 'Team ' + team.team,
-                    value: helper.getObjectValues(team.players, 'name').join('\n'),
-                    inline: true
-                }
-            });
-            const main_fields: any[] = [{
-                name: 'Victory Condition',
-                value: match.victoryCondition,
-                inline: true
-            }];
-            if (size) {
-                main_fields.push({
-                    name: 'Size',
-                    value: size,
-                    inline: true
-                })
-            }
-            main_fields.push({ name: '\u200B', value: '\u200B' })
-            const report_fields = [...main_fields, ...team_fields];
+            const report_fields = start_match_embed(match);
             const unknown_players: string[] = [];
             console.log("Teams:", match.teams);
             await Promise.allSettled(match.teams.map(async function(team) {
